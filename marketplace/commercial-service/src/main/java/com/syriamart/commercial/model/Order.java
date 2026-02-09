@@ -4,54 +4,53 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "orders")
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "user", "seller", "orderItems" })
-public class Order {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Order extends BaseEntity {
 
     @Column(unique = true)
+    @ToString.Include
     private String qrTrackingToken;
 
     @Column(name = "qr_id", unique = true)
+    @ToString.Include
     private String qrId;
 
     private String addressId;
+
+    @ToString.Include
     private String trackingNumber;
+
     private String pickupPointId;
     private String paymentMethod;
+
+    @ToString.Include
     private String paymentStatus;
+
     private String discountId;
     private String couponId;
 
     @Column(precision = 10, scale = 2)
+    @ToString.Include
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private OrderStatus status;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -69,12 +68,8 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
-    // Fixed: Combined all pre-persist logic into one method
     @PrePersist
     private void ensureIdentifiers() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID().toString();
-        }
         if (this.qrTrackingToken == null) {
             this.qrTrackingToken = UUID.randomUUID().toString();
         }

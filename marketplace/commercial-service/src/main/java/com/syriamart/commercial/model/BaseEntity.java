@@ -34,5 +34,6 @@ public abstract class BaseEntity {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean deleted = false;
 }

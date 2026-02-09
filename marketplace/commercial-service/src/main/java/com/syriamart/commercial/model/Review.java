@@ -3,6 +3,8 @@ package com.syriamart.commercial.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "reviews")
@@ -10,17 +12,18 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = {"user", "product"})
-public class Review {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Review extends BaseEntity {
 
+    @ToString.Include
     private Integer rating;
+
     private String comment;
 
-    // Add this field to fix the error
     @Builder.Default
+    @ToString.Include
     private boolean approved = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
