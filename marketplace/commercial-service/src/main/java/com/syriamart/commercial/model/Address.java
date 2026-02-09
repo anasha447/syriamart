@@ -2,9 +2,10 @@ package com.syriamart.commercial.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.AddressType;
-
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "addresses")
@@ -12,20 +13,31 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "user", "seller", "admin" })
-public class Address {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Address extends BaseEntity {
 
+    @ToString.Include
     private String addressLine1;
+
+    @ToString.Include
     private String addressLine2;
+
+    @ToString.Include
     private String city;
+
+    @ToString.Include
     private String state;
+
+    @ToString.Include
     private String postalCode;
+
+    @ToString.Include
     private String country;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private AddressType type;
 
     @ManyToOne(fetch = FetchType.LAZY)

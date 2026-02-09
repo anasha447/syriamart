@@ -2,15 +2,12 @@ package com.syriamart.commercial.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.ProductStatus;
-import com.syriamart.commercial.model.enums.ProductStatus;
-
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,41 +16,44 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = {"seller", "subCategory", "orderItems"})
-public class Product {
-    @Id
-    private String id;
-    
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Product extends BaseEntity {
+
+    @ToString.Include
     private String name;
+
     private String description;
+
+    @ToString.Include
     private BigDecimal price;
+
+    @ToString.Include
     private Integer stock;
+
+    @ToString.Include
     private String sku;
+
     private String mainImageUrl;
+
+    @ToString.Include
     private Boolean adminApproved;
-    
+
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private ProductStatus status;
-    
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     @JsonIgnore
     private Seller seller;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     @JsonIgnore
     private SubCategory subCategory;
-    
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
-
-
 }
