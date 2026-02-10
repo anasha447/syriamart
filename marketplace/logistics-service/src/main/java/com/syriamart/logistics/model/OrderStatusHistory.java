@@ -1,13 +1,12 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.syriamart.project.model.enums.OrderStatus;
+import com.syriamart.common.model.BaseEntity;
+import com.syriamart.logistics.model.enums.OrderStatus;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "order_status_history")
@@ -15,20 +14,18 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString
-public class OrderStatusHistory {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class OrderStatusHistory extends BaseEntity {
 
     private String note;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private OrderStatus status;
 
-    @CreationTimestamp
-    private LocalDateTime changedAt;
-
     @Column(name = "order_id")
+    @ToString.Include
     private String orderId;
 }

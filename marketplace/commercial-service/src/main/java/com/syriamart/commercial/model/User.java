@@ -1,5 +1,7 @@
 package com.syriamart.commercial.model;
 
+import com.syriamart.common.model.BaseEntity;
+
 import com.syriamart.common.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;

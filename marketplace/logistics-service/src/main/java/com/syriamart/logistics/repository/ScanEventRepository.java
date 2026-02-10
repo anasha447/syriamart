@@ -1,6 +1,6 @@
-package com.syriamart.project.repository;
+package com.syriamart.logistics.repository;
 
-import com.syriamart.project.model.ScanEvent;
+import com.syriamart.logistics.model.ScanEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
