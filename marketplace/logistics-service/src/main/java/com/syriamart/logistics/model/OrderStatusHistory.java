@@ -1,7 +1,7 @@
 package com.syriamart.logistics.model;
 
 import com.syriamart.common.model.BaseEntity;
-import com.syriamart.logistics.model.enums.OrderStatus;
+import com.syriamart.common.model.enums.OrderStatus;
 
 import jakarta.persistence.*;
 import lombok.*;
