@@ -1,8 +1,12 @@
 package com.syriamart.commercial.model;
 
+import com.syriamart.common.model.BaseEntity;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import com.syriamart.commercial.model.enums.DiscountScope;
 import com.syriamart.commercial.model.enums.DiscountType;
@@ -15,19 +19,23 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "product", "category", "seller" })
-public class Discount {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Discount extends BaseEntity {
 
+    @ToString.Include
     private String name;
+
+    @ToString.Include
     private BigDecimal value;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private DiscountType discountType;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private DiscountScope scopeType;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,8 +1,11 @@
 package com.syriamart.commercial.model;
 
+import com.syriamart.common.model.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,22 +16,24 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = {"addresses"})
-public class Admin {
-    @Id
-    private String id;
-    
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Admin extends BaseEntity {
+
+    @ToString.Include
     private String username;
+
+    @ToString.Include
     private String email;
+
     private String passwordHash;
+
+    @ToString.Include
     private String fullName;
-    
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-    
+
     private LocalDateTime lastLogin;
-    
+
     @OneToMany(mappedBy = "admin", fetch = FetchType.LAZY)
     private List<Address> addresses;
 }

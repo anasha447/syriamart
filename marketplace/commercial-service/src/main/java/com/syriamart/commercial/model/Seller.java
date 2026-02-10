@@ -1,12 +1,13 @@
 package com.syriamart.commercial.model;
 
+import com.syriamart.common.model.BaseEntity;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.SellerStatus;
-
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,26 +15,29 @@ import java.util.List;
 
 @Entity
 @Table(name = "sellers")
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "addresses", "products", "orders" })
-public class Seller {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Seller extends BaseEntity {
 
-    // Keep boolean flag
+    @ToString.Include
     private Boolean adminApproved;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "approved_by_admin_id")
     @JsonIgnore
     private Admin approvedByAdmin;
+
+    @ToString.Include
     private String name;
+
+    @ToString.Include
     private String email;
+
     private String passwordHash;
     private String phone;
     private String addressId;
@@ -43,11 +47,8 @@ public class Seller {
     private BigDecimal profitPercentage;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private SellerStatus status;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     private LocalDateTime lastLogin;
 

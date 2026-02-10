@@ -1,9 +1,12 @@
 package com.syriamart.commercial.model;
 
-import com.syriamart.common.model.enums.UserRole; // Import from common-lib
+import com.syriamart.common.model.BaseEntity;
+
+import com.syriamart.common.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,26 +17,29 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "addresses", "orders" })
-public class User {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
+    @ToString.Include
     private String email;
 
     private String passwordHash;
+
+    @ToString.Include
     private String fullName;
+
     private String phone;
     private String addressId;
+
+    @ToString.Include
     private Boolean isActive;
 
-    @Enumerated(EnumType.STRING) // IMPORTANT: Maps the Enum to a String in DB
+    @Enumerated(EnumType.STRING)
+    @ToString.Include
     private UserRole role;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
 
     private LocalDateTime lastLogin;
 

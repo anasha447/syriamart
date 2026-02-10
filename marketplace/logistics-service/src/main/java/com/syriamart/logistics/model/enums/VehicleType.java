@@ -1,4 +1,4 @@
-package com.syriamart.project.model.enums;
+package com.syriamart.logistics.model.enums;
 
 public enum VehicleType {
     BIKE, TRUCK

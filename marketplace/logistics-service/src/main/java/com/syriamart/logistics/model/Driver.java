@@ -1,11 +1,12 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
+
+import com.syriamart.common.model.BaseEntity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
@@ -15,21 +16,26 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Driver {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Driver extends BaseEntity {
 
+    @ToString.Include
     private String fullName;
+
+    @ToString.Include
     private String email;
+
+    @ToString.Include
     private String phone;
-    private String status; // ONLINE, OFFLINE
+
+    @ToString.Include
+    private String status;
+
+    @ToString.Include
     private Double currentRating;
+
+    @ToString.Include
     private Integer totalDeliveries;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

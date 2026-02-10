@@ -1,11 +1,15 @@
 package com.syriamart.commercial.model;
 
+import com.syriamart.common.model.BaseEntity;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.DiscountScope;
 import com.syriamart.commercial.model.enums.DiscountType;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 
@@ -15,23 +19,30 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "product", "category", "seller" })
-public class Coupon {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Coupon extends BaseEntity {
 
     @Column(unique = true)
+    @ToString.Include
     private String code;
 
+    @ToString.Include
     private BigDecimal value;
+
+    @ToString.Include
     private BigDecimal minOrderAmount;
+
+    @ToString.Include
     private Integer maxUses;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private DiscountType discountType;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private DiscountScope scopeType;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,19 +64,7 @@ public class Coupon {
     @PreUpdate
     private void validateScope() {
         if (scopeType == null) {
-            // Logic: if scopeType is null, perhaps global? Or required?
-            // "Add validation: checks that exactly one ... is set and it matches scopeType"
-            // Suggests scopeType IS required for this validation to make sense.
-            // But if it's GLOBAL coupon? Maybe scopeType=SELLER means valid for seller's
-            // items.
-            // If scopeType is null, maybe no restriction?
-            // Prompt says: "Create enum ... { PRODUCT, CATEGORY, SELLER }"
-            // Doesn't say GLOBAL.
-            // I'll enforce it as per instructions.
-            return; // Or throw? Instructions imply structured scoping.
-            // "Add validation: @PrePersist checks that exactly one of
-            // productId/categoryId/sellerId is set and it matches scopeType"
-            // This implies strict coupling.
+            return;
         }
 
         boolean valid = switch (scopeType) {

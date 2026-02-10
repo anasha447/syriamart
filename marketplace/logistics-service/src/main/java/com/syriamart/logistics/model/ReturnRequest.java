@@ -1,14 +1,16 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.syriamart.project.model.enums.ReturnRequestStatus;
+import com.syriamart.common.model.BaseEntity;
+import com.syriamart.logistics.model.enums.ReturnRequestStatus;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "return_requests")
@@ -16,24 +18,27 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "assignedDriver" })
-public class ReturnRequest {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class ReturnRequest extends BaseEntity {
 
+    @ToString.Include
     private String customerId;
+
     private String reason;
+
+    @ToString.Include
     private BigDecimal refundAmount;
+
     private String proofImageUrl;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private ReturnRequestStatus status;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
     @Column(name = "order_item_id")
+    @ToString.Include
     private String orderItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)

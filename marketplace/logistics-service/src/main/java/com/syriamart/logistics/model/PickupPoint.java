@@ -1,8 +1,11 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.syriamart.common.model.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "pickup_points")
@@ -10,15 +13,16 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = {})
-public class PickupPoint {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class PickupPoint extends BaseEntity {
 
+    @ToString.Include
     private String name;
 
     private String addressId;
 
+    @ToString.Include
     private String sellerId;
 }
