@@ -1,7 +1,7 @@
 package com.syriamart.commercial.repository;
 
 import com.syriamart.commercial.model.Order;
-import com.syriamart.commercial.model.enums.OrderStatus;
+import com.syriamart.common.model.enums.OrderStatus;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
