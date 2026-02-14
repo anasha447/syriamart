@@ -54,15 +54,9 @@ public class Order extends BaseEntity {
     @ToString.Include
     private OrderStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    private String userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    @JsonIgnore
-    private Seller seller;
+    private String sellerId;
 
     @Column(name = "assigned_driver_id")
     private String assignedDriverId;

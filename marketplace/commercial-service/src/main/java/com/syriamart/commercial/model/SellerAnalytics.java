@@ -29,8 +29,6 @@ public class SellerAnalytics extends BaseEntity {
     @ToString.Include
     private Integer totalOrders;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    @JsonIgnore
-    private Seller seller;
+    @Column(name = "seller_id")
+    private String sellerId;
 }

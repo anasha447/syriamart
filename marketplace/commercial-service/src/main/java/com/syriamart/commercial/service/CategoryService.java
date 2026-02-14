@@ -1,9 +1,9 @@
 package com.syriamart.commercial.service;
 
-import com.syriamart.commercial.dto.request.admin.CategoryCreateRequest;
-import com.syriamart.commercial.dto.request.admin.CategoryUpdateRequest;
-import com.syriamart.commercial.dto.response.admin.CategoryTreeResponse;
-import com.syriamart.commercial.dto.response.customer.CategoryResponse;
+import com.syriamart.commercial.dto.request.category.CategoryCreateRequest;
+import com.syriamart.commercial.dto.request.category.CategoryUpdateRequest;
+import com.syriamart.commercial.dto.response.category.CategoryTreeResponse;
+import com.syriamart.commercial.dto.response.category.CategoryResponse;
 
 import java.util.List;
 

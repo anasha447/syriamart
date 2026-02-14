@@ -46,10 +46,7 @@ public class Product extends BaseEntity {
     @ToString.Include
     private ProductStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    @JsonIgnore
-    private Seller seller;
+    private String sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -58,4 +55,19 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductImage> images;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductVariation> variations;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<CartItem> cartItems;
+
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<WishlistItem> wishlistItems;
 }

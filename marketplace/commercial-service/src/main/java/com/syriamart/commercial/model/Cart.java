@@ -24,10 +24,8 @@ public class Cart extends BaseEntity {
     @ToString.Include
     private Boolean isActive;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    @Column(name = "user_id")
+    private String userId;
 
     @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
     private List<CartItem> cartItems;
