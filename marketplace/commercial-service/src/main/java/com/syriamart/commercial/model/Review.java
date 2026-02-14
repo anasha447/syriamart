@@ -28,10 +28,8 @@ public class Review extends BaseEntity {
     @ToString.Include
     private boolean approved = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    @Column(name = "user_id")
+    private String userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

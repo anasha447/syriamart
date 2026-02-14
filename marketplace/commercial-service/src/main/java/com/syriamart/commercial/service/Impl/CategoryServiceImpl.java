@@ -1,9 +1,9 @@
 package com.syriamart.commercial.service.Impl;
 
-import com.syriamart.commercial.dto.request.admin.CategoryCreateRequest;
-import com.syriamart.commercial.dto.request.admin.CategoryUpdateRequest;
-import com.syriamart.commercial.dto.response.admin.CategoryTreeResponse;
-import com.syriamart.commercial.dto.response.customer.CategoryResponse;
+import com.syriamart.commercial.dto.request.category.CategoryCreateRequest;
+import com.syriamart.commercial.dto.request.category.CategoryUpdateRequest;
+import com.syriamart.commercial.dto.response.category.CategoryTreeResponse;
+import com.syriamart.commercial.dto.response.category.CategoryResponse;
 import com.syriamart.commercial.mapper.CategoryMapper;
 import com.syriamart.commercial.model.Category;
 import com.syriamart.commercial.model.SubCategory;
@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryResponse createRootCategory(CategoryCreateRequest request) {
         Category category = categoryMapper.toCategoryEntity(request);
-        category.setId(UUID.randomUUID().toString());
+        // ID generation is usually handled by BaseEntity or DB, but keeping existing logic if not
         return categoryMapper.toResponse(categoryRepository.save(category));
     }
 
@@ -47,7 +47,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Parent Category not found with id: " + request.parentCategoryId()));
 
         SubCategory subCategory = categoryMapper.toSubCategoryEntity(request);
-        subCategory.setId(UUID.randomUUID().toString());
         subCategory.setCategory(parent);
         return categoryMapper.toSubCategoryResponse(subCategoryRepository.save(subCategory));
     }
@@ -61,6 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
                     if (request.adminProfitPercentage() != null) category.setAdminProfitPercentage(request.adminProfitPercentage());
                     return categoryMapper.toResponse(categoryRepository.save(category));
                 })
+                .map(response -> (CategoryResponse) response) // Cast to satisfy return type inference if needed
                 .orElseGet(() -> updateSubCategory(id, request));
     }
 

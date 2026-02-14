@@ -19,6 +19,7 @@
 		<module>commercial-service</module>
 		<module>logistics-service</module>
 		<module>common-lib</module>
+		<module>user-service</module>
 	</modules>
 
 	<properties>

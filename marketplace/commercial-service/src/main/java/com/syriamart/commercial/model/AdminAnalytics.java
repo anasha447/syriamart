@@ -26,8 +26,6 @@ public class AdminAnalytics extends BaseEntity {
     @ToString.Include
     private BigDecimal totalSales;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id")
-    @JsonIgnore
-    private Admin admin;
+    @Column(name = "admin_id")
+    private String adminId;
 }

@@ -24,7 +24,7 @@ public class User extends Person {
 
     private String passwordHash;
 
-    private String addressId;
+    // private String addressId; // Removed as requested
 
     @ToString.Include
     private Boolean isActive;
@@ -38,6 +38,4 @@ public class User extends Person {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Address> addresses;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Order> orders;
 }

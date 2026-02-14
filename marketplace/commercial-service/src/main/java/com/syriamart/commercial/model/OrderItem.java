@@ -22,14 +22,16 @@ import java.math.BigDecimal;
 @SQLRestriction("deleted = false")
 public class OrderItem extends BaseEntity {
 
-    @ToString.Include
-    private String variationValueId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "variation_value_id")
+    @JsonIgnore
+    private ProductVariationValue variationValue;
 
     @ToString.Include
     private Integer quantity;
 
     @ToString.Include
-    private BigDecimal price;
+    private BigDecimal unitPrice;
 
     private String discountId;
     private String couponId;

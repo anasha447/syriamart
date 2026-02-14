@@ -3,7 +3,7 @@ package com.syriamart.userservice.model;
 import com.syriamart.common.model.BaseEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.syriamart.commercial.model.enums.AddressType;
+import com.syriamart.userservice.model.enums.AddressType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
