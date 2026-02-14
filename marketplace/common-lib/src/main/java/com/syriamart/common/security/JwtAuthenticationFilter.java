@@ -1,6 +1,5 @@
-package com.syriamart.commercial.security; // Update to .logistics for the other service
+package com.syriamart.common.security;
 
-import com.syriamart.common.security.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
@@ -29,28 +28,50 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
+        String requestURI = request.getRequestURI();
+
+        // 1. Log the Request
+        System.out.println("🔍 FILTER: Processing Request to: " + requestURI);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
                 Claims claims = jwtUtils.validateAndGetClaims(token);
                 String email = claims.getSubject();
-                String role = claims.get("role", String.class);
+                String rawRole = claims.get("role", String.class);
+
+                // 2. Log what is inside the token
+                System.out.println("✅ FILTER: Token Valid. Email: " + email + ", Raw Role: " + rawRole);
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    // Prepend ROLE_ so .hasRole("ADMIN") works in SecurityConfig
-                    var authority = new SimpleGrantedAuthority("ROLE_" + role);
 
-                    var authToken = new UsernamePasswordAuthenticationToken(email, null, List.of(authority));
+                    // Logic to ensure ROLE_ prefix
+                    String finalRole = (rawRole != null && rawRole.startsWith("ROLE_"))
+                            ? rawRole
+                            : "ROLE_" + rawRole;
+
+                    // 3. Log the final authority we are giving Spring Security
+                    System.out.println("🛡️ FILTER: Assigning Authority: " + finalRole);
+
+                    var authority = new SimpleGrantedAuthority(finalRole);
+                    var authToken = new UsernamePasswordAuthenticationToken(
+                            email,
+                            null,
+                            Collections.singletonList(authority)
+                    );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    System.out.println("🔐 FILTER: Authentication set in Context for: " + email);
                 }
             } catch (Exception e) {
-                // Clear context if token is invalid/expired
+                System.out.println("❌ FILTER: Token Validation Failed: " + e.getMessage());
                 SecurityContextHolder.clearContext();
             }
+        } else {
+            System.out.println("⚠️ FILTER: No Valid Bearer Token found.");
         }
+
         filterChain.doFilter(request, response);
     }
 }

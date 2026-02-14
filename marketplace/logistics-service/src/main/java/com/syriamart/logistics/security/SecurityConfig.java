@@ -1,6 +1,6 @@
 package com.syriamart.logistics.security;
 
-import com.syriamart.logistics.security.JwtAuthenticationFilter;
+import com.syriamart.common.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

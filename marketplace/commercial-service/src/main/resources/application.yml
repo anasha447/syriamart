@@ -1,0 +1,36 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: commercial-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5400/commercial_db
+    username: postgres
+    password: 'Anas09303@nas' # Bolder quote used due to special characters
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        security.web: DEBUG
+        security.authorization: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics, shutdown
+  endpoint:
+    health:
+      show-details: always
