@@ -1,13 +1,12 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
+
+import com.syriamart.common.model.Person;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "drivers")
@@ -15,21 +14,17 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Driver {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class Driver extends Person {
 
-    private String fullName;
-    private String email;
-    private String phone;
-    private String status; // ONLINE, OFFLINE
+    @ToString.Include
+    private String status;
+
+    @ToString.Include
     private Double currentRating;
+
+    @ToString.Include
     private Integer totalDeliveries;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }

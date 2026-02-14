@@ -1,4 +1,4 @@
-package com.syriamart.commercial.model;
+package com.syriamart.common.model;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,5 +1,6 @@
-package com.syriamart.commercial.model;
+package com.syriamart.userservice.model;
 
+import com.syriamart.common.model.Person;
 import com.syriamart.common.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,18 +19,11 @@ import java.util.List;
 @SuperBuilder
 @ToString(onlyExplicitlyIncluded = true, callSuper = true)
 @SQLRestriction("deleted = false")
-public class User extends BaseEntity {
-
-    @Column(unique = true, nullable = false)
-    @ToString.Include
-    private String email;
+@AttributeOverride(name = "email", column = @Column(name = "email", unique = true, nullable = false))
+public class User extends Person {
 
     private String passwordHash;
 
-    @ToString.Include
-    private String fullName;
-
-    private String phone;
     private String addressId;
 
     @ToString.Include

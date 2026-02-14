@@ -1,6 +1,6 @@
-package com.syriamart.project.repository;
+package com.syriamart.logistics.repository;
 
-import com.syriamart.project.model.PickupPoint;
+import com.syriamart.logistics.model.PickupPoint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

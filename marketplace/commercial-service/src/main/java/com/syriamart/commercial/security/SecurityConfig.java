@@ -1,9 +1,11 @@
 package com.syriamart.commercial.security;
 
-import com.syriamart.commercial.security.JwtAuthenticationFilter;
+import com.syriamart.common.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -16,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
@@ -26,18 +29,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. PUBLIC: Anyone can log in, register, or browse products
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/products/**").permitAll()
+                        // 1. Completely Public (Login, Register)
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
+                        // 2. Public Read-Only Access (Categories/Products) - FIX HERE
+                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
 
-                        // 2. SELLER: Can manage their own inventory
-                        .requestMatchers("/api/v1/seller/**").hasRole("SELLER")
+                        // 3. SELLER
+                        .requestMatchers("/api/seller/**").hasRole("SELLER")
 
-                        // 3. ADMIN: Can approve products and manage users
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        // 4. ADMIN
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                        // 4. CUSTOMER: Can manage cart and orders
-                        .requestMatchers("/api/v1/customer/**").hasRole("CUSTOMER")
+                        // 5. CUSTOMER (Specific actions like cart/order)
+                        // Note: Don't use /public/ for secured customer endpoints. Use /customer/ instead.
+                        .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
 
                         .anyRequest().authenticated()
                 )

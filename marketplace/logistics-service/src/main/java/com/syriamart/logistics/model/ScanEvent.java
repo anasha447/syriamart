@@ -1,12 +1,14 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.syriamart.common.model.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "scan_events")
@@ -14,22 +16,28 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "deliveryProfile" })
-public class ScanEvent {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class ScanEvent extends BaseEntity {
 
+    @ToString.Include
     private String scannedByUserId;
+
+    @ToString.Include
     private BigDecimal scanLocationLat;
+
+    @ToString.Include
     private BigDecimal scanLocationLong;
+
+    @ToString.Include
     private String previousStatus;
+
+    @ToString.Include
     private String newStatus;
 
-    @CreationTimestamp
-    private LocalDateTime scannedAt;
-
     @Column(name = "order_id")
+    @ToString.Include
     private String orderId;
 
     @ManyToOne(fetch = FetchType.LAZY)

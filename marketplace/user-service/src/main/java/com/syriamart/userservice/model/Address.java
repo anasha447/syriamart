@@ -1,4 +1,6 @@
-package com.syriamart.commercial.model;
+package com.syriamart.userservice.model;
+
+import com.syriamart.common.model.BaseEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.AddressType;

@@ -1,4 +1,6 @@
-package com.syriamart.commercial.model;
+package com.syriamart.userservice.model;
+
+import com.syriamart.common.model.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.*;

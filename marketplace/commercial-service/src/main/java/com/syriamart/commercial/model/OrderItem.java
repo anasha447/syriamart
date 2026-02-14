@@ -1,5 +1,7 @@
 package com.syriamart.commercial.model;
 
+import com.syriamart.common.model.BaseEntity;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.commercial.model.enums.OrderItemStatus;
 import jakarta.persistence.*;

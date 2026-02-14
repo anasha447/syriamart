@@ -1,4 +1,4 @@
-package com.syriamart.commercial.mapper;
+package com.syriamart.userservice.mapper;
 
 import com.syriamart.commercial.dto.request.customer.UserRegistrationRequest;
 import com.syriamart.commercial.dto.response.admin.UserManagementResponse;

@@ -19,11 +19,11 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // 1. Create Test Seller
         if (userRepository.findByEmail("seller@syriamart.com").isEmpty()) {
             User seller = new User();
             seller.setId(UUID.randomUUID().toString());
             seller.setEmail("seller@syriamart.com");
-            // Encrypting the password "123456"
             seller.setPasswordHash(passwordEncoder.encode("123456"));
             seller.setFullName("Test Seller");
             seller.setRole(UserRole.SELLER);
@@ -31,6 +31,21 @@ public class DataInitializer implements CommandLineRunner {
 
             userRepository.save(seller);
             System.out.println("✅ Test Seller Created: email: seller@syriamart.com, password: 123456");
+        }
+
+        // 2. Create Test Admin (Added this block)
+        if (userRepository.findByEmail("admin@syriamart.com").isEmpty()) {
+            User admin = new User();
+            admin.setId(UUID.randomUUID().toString());
+            admin.setEmail("admin@syriamart.com");
+            // Encrypting the password "123456"
+            admin.setPasswordHash(passwordEncoder.encode("123456"));
+            admin.setFullName("System Admin");
+            admin.setRole(UserRole.ADMIN); // Make sure UserRole.ADMIN exists in your Enum
+            admin.setIsActive(true);
+
+            userRepository.save(admin);
+            System.out.println("✅ Test Admin Created: email: admin@syriamart.com, password: 123456");
         }
     }
 }

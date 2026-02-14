@@ -1,10 +1,13 @@
-package com.syriamart.project.model;
+package com.syriamart.logistics.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.syriamart.project.model.enums.VehicleType;
+import com.syriamart.logistics.model.enums.VehicleType;
+import com.syriamart.common.model.BaseEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,21 +18,31 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@ToString(exclude = { "scanEvents", "returnRequests" })
-public class DeliveryProfile {
-    @Id
-    private String id;
+@SuperBuilder
+@ToString(onlyExplicitlyIncluded = true, callSuper = true)
+@SQLRestriction("deleted = false")
+public class DeliveryProfile extends BaseEntity {
 
+    @ToString.Include
     private String vehiclePlateNumber;
+
+    @ToString.Include
     private BigDecimal currentLatitude;
+
+    @ToString.Include
     private BigDecimal currentLongitude;
+
+    @ToString.Include
     private Boolean isAvailable;
+
+    @ToString.Include
     private BigDecimal rating;
 
     @Enumerated(EnumType.STRING)
+    @ToString.Include
     private VehicleType vehicleType;
 
+    @ToString.Include
     private String userId;
 
     @OneToMany(mappedBy = "deliveryProfile", fetch = FetchType.LAZY)

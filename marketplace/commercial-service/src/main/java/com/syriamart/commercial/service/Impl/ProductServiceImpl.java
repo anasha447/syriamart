@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDetailResponse createProduct(ProductCreateRequest request, String sellerId) {
         // 1. Fetch related entities
-        // Ensure SellerRepository imports com.syriamart.commercial.model.Seller
+        // Ensure SellerRepository imports com.syriamart.userservice.model.Seller
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
 

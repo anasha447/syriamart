@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 public class SharedBeanConfig {
 
     @Bean
-    public JwtUtils jwtUtils() {
-        return new JwtUtils(); // Manually creating the bean from common-lib
+    public JwtUtils jwtUtils() {return new JwtUtils(); // Manually creating the bean from common-lib
     }
 }

@@ -1,4 +1,4 @@
-package com.syriamart.commercial.model.enums;
+package com.syriamart.userservice.model.enums;
 
 public enum AddressType {
     HOME, WORK, PICKUP_POINT
