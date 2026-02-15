@@ -6,12 +6,9 @@ import com.syriamart.userservice.dto.response.address.AddressResponse;
 import com.syriamart.userservice.model.Address;
 import com.syriamart.userservice.model.enums.AddressType;
 import com.syriamart.common.mapper.MapperConfigData;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
-@Mapper(config = MapperConfigData.class, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(config = MapperConfigData.class, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AddressMapper {
 
     @Mapping(target = "type", expression = "java(mapAddressType(request.type()))")
@@ -23,6 +20,7 @@ public interface AddressMapper {
     @Mapping(target = "type", expression = "java(address.getType() != null ? address.getType().name() : null)")
     AddressResponse toResponse(Address address);
 
+    @Mapping(target = "type", expression = "java(mapAddressType(request.type()))")
     void updateEntity(@MappingTarget Address address, AddressUpdateRequest request);
 
     default AddressType mapAddressType(String type) {
