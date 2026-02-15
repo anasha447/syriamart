@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -11,9 +12,10 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     // Note: This must be the same string in all services
-    private final String SECRET = "YourSuperSecretKeyMustBeSharedBetweenServices!!";
+    @Value("${jwt.secret}")
+    private String secret;
 
-    // 1. Used by Commercial Service (Login)
+    // 1. Token generation is used by user-service, while parsing is used by all services.
     public String generateToken(String email, String role, String userId) {
         return Jwts.builder()
                 .setSubject(email)
@@ -21,14 +23,14 @@ public class JwtUtils {
                 .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 Hours
-                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // 2. Used by BOTH Services to parse the token
     public Claims validateAndGetClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();

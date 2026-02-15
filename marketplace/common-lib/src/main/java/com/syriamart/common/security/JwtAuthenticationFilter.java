@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import java.util.Collections;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
@@ -31,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         // 1. Log the Request
-        System.out.println("🔍 FILTER: Processing Request to: " + requestURI);
+        log.debug("🔍 FILTER: Processing Request to: {}", requestURI);
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
@@ -41,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String rawRole = claims.get("role", String.class);
 
                 // 2. Log what is inside the token
-                System.out.println("✅ FILTER: Token Valid. Email: " + email + ", Raw Role: " + rawRole);
+                log.debug("✅ FILTER: Token Valid. Email: {}, Raw Role: {}", email, rawRole);
 
                 if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -51,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             : "ROLE_" + rawRole;
 
                     // 3. Log the final authority we are giving Spring Security
-                    System.out.println("🛡️ FILTER: Assigning Authority: " + finalRole);
+                    log.debug("🛡️ FILTER: Assigning Authority: {}", finalRole);
 
                     var authority = new SimpleGrantedAuthority(finalRole);
                     var authToken = new UsernamePasswordAuthenticationToken(
@@ -62,14 +64,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-                    System.out.println("🔐 FILTER: Authentication set in Context for: " + email);
+                    log.debug("🔐 FILTER: Authentication set in Context for: {}", email);
                 }
             } catch (Exception e) {
-                System.out.println("❌ FILTER: Token Validation Failed: " + e.getMessage());
+                log.error("❌ FILTER: Token Validation Failed: {}", e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         } else {
-            System.out.println("⚠️ FILTER: No Valid Bearer Token found.");
+            log.debug("⚠️ FILTER: No Valid Bearer Token found.");
         }
 
         filterChain.doFilter(request, response);
