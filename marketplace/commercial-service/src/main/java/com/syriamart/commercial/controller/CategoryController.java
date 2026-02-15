@@ -1,10 +1,10 @@
 package com.syriamart.commercial.controller;
 
-import com.syriamart.commercial.dto.request.admin.CategoryCreateRequest;
-import com.syriamart.commercial.dto.request.admin.CategoryUpdateRequest;
-import com.syriamart.commercial.dto.response.admin.CategoryTreeResponse;
-import com.syriamart.commercial.dto.response.customer.CategoryResponse;
-import com.syriamart.commercial.service.Impl.CategoryServiceImpl;
+import com.syriamart.commercial.dto.request.category.CategoryCreateRequest;
+import com.syriamart.commercial.dto.request.category.CategoryUpdateRequest;
+import com.syriamart.commercial.dto.response.category.CategoryTreeResponse;
+import com.syriamart.commercial.dto.response.category.CategoryResponse;
+import com.syriamart.commercial.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private final CategoryServiceImpl categoryService;
+    private final CategoryService categoryService;
 
     // ====================================================
     // PUBLIC ENDPOINTS (Anyone can see categories)

@@ -1,23 +1,26 @@
 package com.syriamart.commercial.mapper;
 
-import com.syriamart.commercial.dto.request.admin.CategoryCreateRequest;
-import com.syriamart.commercial.dto.response.admin.CategoryTreeResponse;
-import com.syriamart.commercial.dto.response.customer.CategoryResponse;
+import com.syriamart.commercial.dto.request.category.CategoryCreateRequest;
+import com.syriamart.commercial.dto.response.category.CategoryTreeResponse;
+import com.syriamart.commercial.dto.response.category.CategoryResponse;
 import com.syriamart.common.mapper.MapperConfigData;
 import com.syriamart.commercial.model.Category;
 import com.syriamart.commercial.model.SubCategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(config = MapperConfigData.class, componentModel = "spring")
+@Mapper(config = MapperConfigData.class, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CategoryMapper {
 
     // 1. Entity -> Response (Root)
     @Mapping(target = "productCount", constant = "0")
+    @Mapping(target = "imageUrl", ignore = true) // Not in entity
     CategoryResponse toResponse(Category category);
 
     // 2. Entity -> Response (Sub) - THIS WAS MISSING IN IMPL
     @Mapping(target = "productCount", constant = "0")
+    @Mapping(target = "imageUrl", ignore = true) // Not in entity
     CategoryResponse toSubCategoryResponse(SubCategory subCategory);
 
     // 3. Request -> Entity (Root)
@@ -25,6 +28,7 @@ public interface CategoryMapper {
     @Mapping(target = "subCategories", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     Category toCategoryEntity(CategoryCreateRequest request);
 
     // 4. Request -> Entity (Sub)
@@ -33,6 +37,7 @@ public interface CategoryMapper {
     @Mapping(target = "products", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     SubCategory toSubCategoryEntity(CategoryCreateRequest request);
 
     // 5. Tree View
@@ -41,8 +46,6 @@ public interface CategoryMapper {
     CategoryTreeResponse toTreeResponse(Category category);
 
     // 6. Tree View Helper (For SubCategories inside the list)
-    // MapStruct needs to know how to map List<SubCategory> -> List<CategoryTreeResponse>
-    // Since SubCategory doesn't have "profitPercentage" or "subCategories", we ignore/null them.
     @Mapping(target = "children", ignore = true)
     @Mapping(target = "adminProfitPercentage", ignore = true)
     @Mapping(target = "productCount", constant = "0")

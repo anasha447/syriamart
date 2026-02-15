@@ -1,9 +1,9 @@
 package com.syriamart.userservice.model;
 
 import com.syriamart.common.model.BaseEntity;
+import com.syriamart.userservice.model.enums.SellerStatus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.syriamart.commercial.model.enums.SellerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -40,8 +40,17 @@ public class Seller extends BaseEntity {
 
     private String passwordHash;
     private String phone;
-    private String addressId;
+    // private String addressId; // Removed as requested
     private String profileImageUrl;
+
+    @ToString.Include
+    private String storeName;
+
+    @ToString.Include
+    private String storeLocation;
+
+    @ToString.Include
+    private String productType;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal profitPercentage;
@@ -54,10 +63,4 @@ public class Seller extends BaseEntity {
 
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
     private List<Address> addresses;
-
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-    private List<Product> products;
-
-    @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
-    private List<Order> orders;
 }

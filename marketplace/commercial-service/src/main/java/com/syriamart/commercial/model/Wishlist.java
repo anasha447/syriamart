@@ -21,10 +21,8 @@ import java.util.List;
 @SQLRestriction("deleted = false")
 public class Wishlist extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
+    @Column(name = "user_id")
+    private String userId;
 
     @OneToMany(mappedBy = "wishlist", fetch = FetchType.LAZY)
     private List<WishlistItem> wishlistItems;

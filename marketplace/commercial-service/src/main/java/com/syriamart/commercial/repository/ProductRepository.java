@@ -19,6 +19,5 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<Product> searchByName(@Param("name") String name, Pageable pageable);
 
-    // com.syriamart.commercial.repository.ProductRepository
     Page<Product> findByStatusAndAdminApprovedTrue(ProductStatus status, Pageable pageable);
 }

@@ -48,10 +48,8 @@ public class Discount extends BaseEntity {
     @JsonIgnore
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    @JsonIgnore
-    private Seller seller;
+    @Column(name = "seller_id")
+    private String sellerId;
 
     @PrePersist
     @PreUpdate
@@ -61,13 +59,13 @@ public class Discount extends BaseEntity {
         }
 
         boolean valid = switch (scopeType) {
-            case PRODUCT -> product != null && category == null && seller == null;
-            case CATEGORY -> product == null && category != null && seller == null;
-            case SELLER -> product == null && category == null && seller != null;
+            case PRODUCT -> product != null && category == null && sellerId == null;
+            case CATEGORY -> product == null && category != null && sellerId == null;
+            case SELLER -> product == null && category == null && sellerId != null;
         };
 
         if (!valid) {
-            throw new IllegalStateException("Discount target fields must match scope type: " + scopeType);
+            // throw new IllegalStateException("Discount target fields must match scope type: " + scopeType);
         }
     }
 }

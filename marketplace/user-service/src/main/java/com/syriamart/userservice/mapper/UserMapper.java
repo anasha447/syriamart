@@ -1,29 +1,14 @@
 package com.syriamart.userservice.mapper;
 
-import com.syriamart.commercial.dto.request.customer.UserRegistrationRequest;
-import com.syriamart.commercial.dto.response.admin.UserManagementResponse;
-import com.syriamart.commercial.dto.response.customer.UserProfileResponse;
-import com.syriamart.common.mapper.MapperConfigData;
-import com.syriamart.commercial.model.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.syriamart.userservice.dto.request.user.UserProfileUpdateRequest;
+import com.syriamart.userservice.dto.response.user.UserProfileResponse;
+import com.syriamart.userservice.model.User;
+import org.mapstruct.*;
 
-@Mapper(config = MapperConfigData.class)
+@Mapper(componentModel = "spring", uses = { AddressMapper.class }, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 
-    @Mapping(target = "orderCount", expression = "java(user.getOrders() != null ? user.getOrders().size() : 0)")
-    UserManagementResponse toManagementResponse(User user);
+    void updateUserFromRequest(@MappingTarget User user, UserProfileUpdateRequest request);
 
-    @Mapping(target = "addresses", ignore = true)
-    @Mapping(target = "orderCount", expression = "java(user.getOrders() != null ? user.getOrders().size() : 0)")
-    UserProfileResponse toProfileResponse(User user);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "passwordHash", ignore = true) // Encoded by service
-    @Mapping(target = "isActive", constant = "true")
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "lastLogin", ignore = true)
-    @Mapping(target = "orders", ignore = true)
-    @Mapping(target = "addresses", ignore = true)
-    User toEntity(UserRegistrationRequest request);
+    UserProfileResponse toResponse(User user);
 }
