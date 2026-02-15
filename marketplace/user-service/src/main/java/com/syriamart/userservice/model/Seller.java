@@ -43,6 +43,15 @@ public class Seller extends BaseEntity {
     // private String addressId; // Removed as requested
     private String profileImageUrl;
 
+    @ToString.Include
+    private String storeName;
+
+    @ToString.Include
+    private String storeLocation;
+
+    @ToString.Include
+    private String productType;
+
     @Column(precision = 10, scale = 2)
     private BigDecimal profitPercentage;
 
