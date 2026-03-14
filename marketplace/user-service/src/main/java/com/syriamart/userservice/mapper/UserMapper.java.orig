@@ -5,7 +5,7 @@ import com.syriamart.userservice.dto.response.user.UserProfileResponse;
 import com.syriamart.userservice.model.User;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = { AddressMapper.class }, unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring", uses = { AddressMapper.class }, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 
     void updateUserFromRequest(@MappingTarget User user, UserProfileUpdateRequest request);

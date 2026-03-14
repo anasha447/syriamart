@@ -2,12 +2,12 @@ package com.syriamart.userservice.mapper;
 
 import com.syriamart.userservice.dto.response.auth.AuthenticationResponse;
 import com.syriamart.userservice.model.User;
-import com.syriamart.common.mapper.MapperConfigData;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(config = MapperConfigData.class, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AuthMapper {
 
     @Mapping(target = "accessToken", source = "token")
