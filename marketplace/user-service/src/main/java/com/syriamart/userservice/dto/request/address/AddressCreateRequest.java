@@ -9,6 +9,6 @@ public record AddressCreateRequest(
         @NotBlank @Size(max = 100) String state,
         @NotBlank @Size(max = 20) String postalCode,
         @NotBlank @Size(max = 100) String country,
-        @NotBlank @Pattern(regexp = "HOME|WORK", message = "Type must be HOME, WORK, or PICKUP_POINT") String type
+        @NotBlank @Pattern(regexp = "HOME|WORK|PICKUP_POINT", message = "Type must be HOME, WORK, or PICKUP_POINT") String type
 ) {
 }

@@ -15,6 +15,7 @@ public interface AddressMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "seller", ignore = true)
     @Mapping(target = "admin", ignore = true)
+    @Mapping(target = "id", ignore = true)
     Address toEntity(AddressCreateRequest request);
 
     @Mapping(target = "type", expression = "java(address.getType() != null ? address.getType().name() : null)")
