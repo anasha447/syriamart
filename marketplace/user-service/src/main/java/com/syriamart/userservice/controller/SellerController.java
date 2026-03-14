@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/sellers")
 @RequiredArgsConstructor
@@ -21,6 +23,34 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final JwtUtils jwtUtils;
+
+
+
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SellerDetailResponse>> getAllSellers() {
+        return ResponseEntity.ok(sellerService.getAllSellers());
+    }
+    // NEW: Public endpoint for storefront
+    @GetMapping
+    public ResponseEntity<List<SellerDetailResponse>> getActiveSellers() {
+        return ResponseEntity.ok(sellerService.getActiveSellers());
+    }
+
+    // NEW: Admin endpoint for approval dashboard
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SellerDetailResponse>> getPendingSellers() {
+        return ResponseEntity.ok(sellerService.getPendingSellers());
+    }
+
+    // NEW: Seller fetches their own data
+    @GetMapping("/profile")
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<SellerDetailResponse> getMyProfile(HttpServletRequest request) {
+        String sellerId = extractUserId(request);
+        return ResponseEntity.ok(sellerService.getSellerProfile(sellerId));
+    }
 
     @PutMapping("/profile")
     @PreAuthorize("hasRole('SELLER')")

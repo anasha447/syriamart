@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,6 +24,22 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+    @Override
+    public UserProfileResponse getUserProfile(String userId) {
+        log.info("Fetching profile for user: {}", userId);
+        return userRepository.findById(userId)
+                .map(userMapper::toResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
+    @Override
+    public List<UserProfileResponse> getAllCustomers() {
+        log.info("Fetching all registered users");
+        return userRepository.findAll().stream()
+                .map(userMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
@@ -39,22 +58,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void banUser(String userId, UserBanRequest request) {
         log.info("Processing ban request for user: {}", userId);
-
-        // Ensure the path variable userId matches the body userId if deemed necessary,
-        // or just use the path variable.
-        // Ideally controller checks matching or we trust the service call.
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        if (request.banned()) {
-             user.setIsActive(false);
-             log.warn("User {} has been BANNED. Reason: {}", userId, request.reason());
-        } else {
-             user.setIsActive(true);
-             log.info("User {} has been UNBANNED. Reason: {}", userId, request.reason());
-        }
-
+        user.setIsActive(!request.banned()); // Active if NOT banned
         userRepository.save(user);
+        log.info("User {} active status set to: {}", userId, user.getIsActive());
     }
 }

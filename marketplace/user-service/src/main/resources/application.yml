@@ -1,0 +1,32 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:h2:mem:syriamartdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+jwt:
+  secret: YourSuperSecretKeyMustBeSharedBetweenServices!!
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.syriamart.userservice: DEBUG
+
+# Notice how 'test' is now pushed completely to the left edge!
+test:
+  message: "HELLO FROM YAML! THE FILE IS WORKING!"

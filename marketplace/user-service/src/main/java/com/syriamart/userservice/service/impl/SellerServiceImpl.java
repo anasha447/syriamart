@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -22,6 +25,37 @@ public class SellerServiceImpl implements SellerService {
 
     private final SellerRepository sellerRepository;
     private final SellerMapper sellerMapper;
+
+    @Override
+    public List<SellerDetailResponse> getAllSellers() {
+        log.info("Admin fetching master list of all sellers");
+        return sellerRepository.findAll().stream()
+                .map(sellerMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public SellerDetailResponse getSellerProfile(String sellerId) {
+        log.info("Fetching detail profile for seller: {}", sellerId);
+        return sellerRepository.findById(sellerId)
+                .map(sellerMapper::toResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Seller not found"));
+    }
+
+    @Override
+    public List<SellerDetailResponse> getPendingSellers() {
+        log.info("Fetching all sellers awaiting approval");
+        return sellerRepository.findByStatus(SellerStatus.PENDING).stream()
+                .map(sellerMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SellerDetailResponse> getActiveSellers() {
+        return sellerRepository.findByStatus(SellerStatus.ACTIVE).stream()
+                .map(sellerMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
@@ -46,16 +80,14 @@ public class SellerServiceImpl implements SellerService {
         if (request.approved()) {
             seller.setAdminApproved(true);
             seller.setStatus(SellerStatus.ACTIVE);
-            log.info("Seller {} approved by {}.", sellerId, request.approvedByAdminName());
+            log.info("Seller {} approved.", sellerId);
         } else {
             seller.setAdminApproved(false);
-            // Depending on business logic, rejected might mean SUSPENDED or remain PENDING with a note.
-            // Here we assume it stays in PENDING or similar if rejected, or could have a REJECTED status if added.
-            // Using SUSPENDED or keeping PENDING as per current enum capabilities.
-            // Let's assume rejection just ensures it's not approved/active.
-            log.warn("Seller {} rejected by {}. Reason: {}", sellerId, request.approvedByAdminName(), request.rejectionReason());
+            seller.setStatus(SellerStatus.SUSPENDED);
+            log.warn("Seller {} rejected. Reason: {}", sellerId, request.rejectionReason());
         }
 
         sellerRepository.save(seller);
     }
+
 }

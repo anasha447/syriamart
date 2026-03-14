@@ -1,5 +1,5 @@
 package com.syriamart.userservice.model.enums;
 
 public enum SellerStatus {
-    PENDING, ACTIVE, SUSPENDED, PENDING_APPROVAL
+    PENDING, ACTIVE, SUSPENDED, APPROVED, PENDING_APPROVAL
 }
