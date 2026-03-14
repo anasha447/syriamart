@@ -5,9 +5,10 @@ import com.syriamart.userservice.dto.request.address.AddressUpdateRequest;
 import com.syriamart.userservice.dto.response.address.AddressResponse;
 import com.syriamart.userservice.model.Address;
 import com.syriamart.userservice.model.enums.AddressType;
+import com.syriamart.common.mapper.MapperConfigData;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(config = MapperConfigData.class, componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AddressMapper {
 
     @Mapping(target = "type", expression = "java(mapAddressType(request.type()))")
