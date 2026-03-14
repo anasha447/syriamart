@@ -3,7 +3,7 @@ package com.syriamart.userservice.service.impl;
 import com.syriamart.userservice.dto.request.seller.SellerApprovalRequest;
 import com.syriamart.userservice.dto.request.seller.SellerProfileUpdateRequest;
 import com.syriamart.userservice.dto.response.seller.SellerDetailResponse;
-import com.syriamart.userservice.mapper.SellerMapper;
+import com.syriamart.userservice.mapper.UserMapper;
 import com.syriamart.userservice.model.Seller;
 import com.syriamart.userservice.model.enums.SellerStatus;
 import com.syriamart.userservice.repository.SellerRepository;
@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 public class SellerServiceImpl implements SellerService {
 
     private final SellerRepository sellerRepository;
-    private final SellerMapper sellerMapper;
+    private final UserMapper userMapper;
 
     @Override
     public List<SellerDetailResponse> getAllSellers() {
         log.info("Admin fetching master list of all sellers");
         return sellerRepository.findAll().stream()
-                .map(sellerMapper::toResponse)
+                .map(userMapper::toSellerResponse)
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +38,7 @@ public class SellerServiceImpl implements SellerService {
     public SellerDetailResponse getSellerProfile(String sellerId) {
         log.info("Fetching detail profile for seller: {}", sellerId);
         return sellerRepository.findById(sellerId)
-                .map(sellerMapper::toResponse)
+                .map(userMapper::toSellerResponse)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Seller not found"));
     }
 
@@ -46,14 +46,14 @@ public class SellerServiceImpl implements SellerService {
     public List<SellerDetailResponse> getPendingSellers() {
         log.info("Fetching all sellers awaiting approval");
         return sellerRepository.findByStatus(SellerStatus.PENDING).stream()
-                .map(sellerMapper::toResponse)
+                .map(userMapper::toSellerResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<SellerDetailResponse> getActiveSellers() {
         return sellerRepository.findByStatus(SellerStatus.ACTIVE).stream()
-                .map(sellerMapper::toResponse)
+                .map(userMapper::toSellerResponse)
                 .collect(Collectors.toList());
     }
 
@@ -64,10 +64,10 @@ public class SellerServiceImpl implements SellerService {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Seller not found"));
 
-        sellerMapper.updateSellerFromRequest(seller, request);
+        userMapper.updateSellerFromRequest(seller, request);
         Seller savedSeller = sellerRepository.save(seller);
 
-        return sellerMapper.toResponse(savedSeller);
+        return userMapper.toSellerResponse(savedSeller);
     }
 
     @Override
