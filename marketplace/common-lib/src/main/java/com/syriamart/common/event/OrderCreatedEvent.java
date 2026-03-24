@@ -6,7 +6,7 @@ import java.util.List;
 
 public record OrderCreatedEvent(
         String orderId,
-        String userId,
+        String customerId,
         String sellerId,
         String qrId,
         BigDecimal totalAmount,

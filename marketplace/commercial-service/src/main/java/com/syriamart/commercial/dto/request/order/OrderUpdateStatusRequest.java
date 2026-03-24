@@ -1,8 +1,9 @@
 package com.syriamart.commercial.dto.request.order;
 
-import jakarta.validation.constraints.*;
+import com.syriamart.commercial.model.enums.OrderItemStatus;
+import jakarta.validation.constraints.NotNull;
 
-public record OrderUpdateStatusRequest(@NotNull String orderId,
-        @NotNull @Pattern(regexp = "pending|paid|processing|shipped|delivered|cancelled|refunded") String newStatus,
-        @Size(max = 500) String note) {
-}
+public record OrderUpdateStatusRequest(
+        @NotNull OrderItemStatus status,
+        String sellerNote
+) {}

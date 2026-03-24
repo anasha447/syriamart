@@ -2,11 +2,12 @@ package com.syriamart.commercial.repository;
 
 import com.syriamart.commercial.model.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
 public interface ProductImageRepository extends JpaRepository<ProductImage, String> {
-    List<ProductImage> findByProductId(String productId);
+    List<ProductImage> findByProductIdOrderByIsPrimaryDescDisplayOrderAsc(String productId);
+    Optional<ProductImage> findByProductIdAndIsPrimaryTrue(String productId);
+    void deleteByProductId(String productId);
 }

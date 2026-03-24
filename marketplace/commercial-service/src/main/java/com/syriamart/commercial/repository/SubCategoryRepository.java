@@ -2,11 +2,12 @@ package com.syriamart.commercial.repository;
 
 import com.syriamart.commercial.model.SubCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
 public interface SubCategoryRepository extends JpaRepository<SubCategory, String> {
-    List<SubCategory> findByCategoryId(String categoryId);
+    Optional<SubCategory> findBySlug(String slug);
+    List<SubCategory> findByCategoryIdAndActiveTrueOrderByDisplayOrderAsc(String categoryId);
+    boolean existsByNameIgnoreCaseAndCategoryId(String name, String categoryId);
 }

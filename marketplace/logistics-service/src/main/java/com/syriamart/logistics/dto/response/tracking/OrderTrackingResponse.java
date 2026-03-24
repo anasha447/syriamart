@@ -1,10 +1,20 @@
 package com.syriamart.logistics.dto.response.tracking;
 
-import com.syriamart.logistics.dto.response.driver.DriverInfoResponse;
+import com.syriamart.common.model.enums.OrderStatus;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record OrderTrackingResponse(String orderId, String qrId, String currentStatus, String currentLocation,
-        LocalDateTime lastScannedAt, LocalDateTime expectedDelivery, DriverInfoResponse assignedDriver,
-        List<ScanEventResponse> scanHistory) {
-}
+/**
+ * The full tracking timeline shown to a customer via the public
+ * GET /api/tracking/{orderId} endpoint (no auth required).
+ */
+public record OrderTrackingResponse(
+        String orderId,
+        String trackingNumber,
+        OrderStatus currentStatus,
+        String estimatedDeliveryCity,
+        String assignedDriverName,
+        LocalDateTime lastUpdated,
+        List<ScanEventResponse> timeline
+) {}

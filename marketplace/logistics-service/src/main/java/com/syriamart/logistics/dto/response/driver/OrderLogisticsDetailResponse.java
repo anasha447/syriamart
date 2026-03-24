@@ -1,7 +1,14 @@
 package com.syriamart.logistics.dto.response.driver;
 
-import java.math.BigDecimal;
+import com.syriamart.common.model.enums.OrderStatus;
+import com.syriamart.logistics.dto.response.tracking.ScanEventResponse;
 
-public record OrderLogisticsDetailResponse(String orderId, String qrId, String status, BigDecimal weightKg,
-        String dimensions, String pickupPointName, String deliveryType) {
-}
+import java.util.List;
+
+public record OrderLogisticsDetailResponse(
+        String orderId, OrderStatus currentStatus,
+        String customerName, String customerPhone,
+        String shippingAddress, String city, String governorate,
+        String trackingNumber, String assignedDriverId,
+        List<ScanEventResponse> scanHistory
+) {}

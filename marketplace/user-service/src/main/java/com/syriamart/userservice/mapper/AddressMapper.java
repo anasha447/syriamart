@@ -7,6 +7,8 @@ import com.syriamart.userservice.model.Address;
 import com.syriamart.userservice.model.enums.AddressType;
 import org.mapstruct.*;
 
+// Use ONLY componentModel = "spring" here.
+// Do not reference the common-lib config for now.
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AddressMapper {
 
@@ -15,6 +17,8 @@ public interface AddressMapper {
     @Mapping(target = "seller", ignore = true)
     @Mapping(target = "admin", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true) // Add these
+    @Mapping(target = "updatedAt", ignore = true) // just in case
     Address toEntity(AddressCreateRequest request);
 
     @Mapping(target = "type", expression = "java(address.getType() != null ? address.getType().name() : null)")

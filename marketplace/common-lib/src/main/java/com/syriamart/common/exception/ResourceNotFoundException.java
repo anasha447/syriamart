@@ -1,6 +1,5 @@
 package com.syriamart.common.exception;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -17,5 +16,10 @@ public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    // Fixed constructor to dynamically generate the error message
+    public ResourceNotFoundException(String resourceName, String id) {
+        super(String.format("%s not found with id: %s", resourceName, id));
     }
 }

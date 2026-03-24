@@ -1,0 +1,274 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Light Mode Variables ──────────────────────────────────────────────────
+   All values are HSL components WITHOUT the hsl() wrapper.
+   Tailwind reads them as: hsl(var(--primary))
+   This makes Shadcn/ui components work without any modification.
+   ─────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    /* ── Shadcn/ui semantic slots ────────────────────────────────────────── */
+    --background:             210 20% 98%;    /* #F9FAFB White Smoke        */
+    --foreground:             221 39% 11%;    /* #111827 Rich Carbon        */
+
+    --card:                   0 0% 100%;      /* #FFFFFF                    */
+    --card-foreground:        221 39% 11%;
+
+    --popover:                0 0% 100%;
+    --popover-foreground:     221 39% 11%;
+
+    --primary:                213 56% 23%;    /* #1A365D Midnight Trust     */
+    --primary-foreground:     0 0% 100%;
+
+    --secondary:              220 14% 96%;    /* #F3F4F6 Light Surface      */
+    --secondary-foreground:   220 26% 26%;    /* #374151 Graphite           */
+
+    --muted:                  220 14% 96%;
+    --muted-foreground:       220 9% 46%;     /* #6B7280 Mid Gray           */
+
+    --accent:                 36 100% 50%;    /* #FF9900 Amazon Amber       */
+    --accent-foreground:      221 39% 11%;
+
+    --destructive:            0 72% 51%;      /* #DC2626                    */
+    --destructive-foreground: 0 0% 100%;
+
+    --border:                 220 13% 91%;    /* #D1D5DB                    */
+    --input:                  220 13% 91%;
+    --ring:                   213 56% 23%;    /* #1A365D                    */
+
+    --radius:                 0.5rem;         /* 8px — all component corners */
+
+    /* ── SyrianMart brand tokens ─────────────────────────────────────────── */
+    --brand-midnight:         213 56% 23%;    /* #1A365D Midnight Trust     */
+    --brand-navy:             222 47% 11%;    /* #0F172A Slate Navy         */
+    --brand-sapphire:         214 51% 24%;    /* #1E3A5F Deep Sapphire      */
+    --brand-blue-700:         224 76% 48%;    /* #1D4ED8 Structured Blue    */
+    --brand-blue-500:         217 91% 60%;    /* #3B82F6 Sky Trust          */
+    --brand-blue-100:         214 95% 93%;    /* #DBEAFE Mist Blue          */
+    --brand-blue-50:          214 100% 97%;   /* #EFF6FF Ghost Blue         */
+
+    --brand-amber:            36 100% 50%;    /* #FF9900 Amazon Amber       */
+    --brand-amber-hover:      36 100% 45%;    /* #E68A00                    */
+    --brand-amber-50:         36 100% 95%;    /* #FFF7E6                    */
+
+    --brand-green:            142 73% 36%;    /* #16A34A Growth Green       */
+    --brand-green-50:         138 76% 97%;    /* #F0FDF4                    */
+
+    /* ── Neutral scale ───────────────────────────────────────────────────── */
+    --neutral-900:            221 39% 11%;    /* #111827                    */
+    --neutral-700:            220 26% 26%;    /* #374151                    */
+    --neutral-500:            220 9% 46%;     /* #6B7280                    */
+    --neutral-300:            220 13% 91%;    /* #D1D5DB                    */
+    --neutral-100:            220 14% 96%;    /* #F3F4F6                    */
+    --neutral-50:             210 20% 98%;    /* #F9FAFB                    */
+
+    /* ── Semantic ────────────────────────────────────────────────────────── */
+    --error:                  0 72% 51%;      /* #DC2626                    */
+    --error-bg:               0 86% 97%;      /* #FEF2F2                    */
+    --warning:                38 92% 50%;     /* #D97706                    */
+    --warning-bg:             48 100% 96%;    /* #FFFBEB                    */
+    --info:                   200 98% 39%;    /* #0284C7                    */
+    --success:                142 73% 36%;    /* #16A34A                    */
+    --success-bg:             138 76% 97%;    /* #F0FDF4                    */
+
+    /* ── Seller Sidebar ──────────────────────────────────────────────────── */
+    --sidebar-background:           213 56% 23%;   /* Midnight Trust bg    */
+    --sidebar-foreground:           220 40% 88%;   /* Light text           */
+    --sidebar-primary:              36 100% 50%;   /* Amber CTA            */
+    --sidebar-primary-foreground:   221 39% 11%;
+    --sidebar-accent:               213 50% 32%;   /* Hover state          */
+    --sidebar-accent-foreground:    0 0% 100%;
+    --sidebar-border:               213 56% 18%;   /* Subtle divider       */
+    --sidebar-ring:                 36 100% 50%;
+
+    /* ── Recharts (dashboard charts) ─────────────────────────────────────── */
+    --chart-1:    213 56% 40%;   /* Midnight Trust (lighter for visibility)  */
+    --chart-2:    142 73% 36%;   /* Growth Green                             */
+    --chart-3:    36 100% 50%;   /* Amazon Amber                             */
+    --chart-4:    217 91% 60%;   /* Sky Trust                                */
+    --chart-5:    220 9% 60%;    /* Muted gray                               */
+  }
+
+  /* ─── Dark Mode Variables ─────────────────────────────────────────────────
+     Customer/Seller portals respect system preference.
+     Driver portal FORCES dark via .dark class in its layout.tsx.
+     ─────────────────────────────────────────────────────────────────────── */
+  .dark {
+    --background:             222 47% 11%;    /* #0F172A Slate Navy         */
+    --foreground:             220 14% 92%;    /* Near-white                 */
+
+    --card:                   222 41% 15%;    /* Slightly elevated surface  */
+    --card-foreground:        220 14% 92%;
+
+    --popover:                222 44% 13%;
+    --popover-foreground:     220 14% 92%;
+
+    --primary:                217 91% 65%;    /* Sky Trust — brighter on dark */
+    --primary-foreground:     222 47% 11%;
+
+    --secondary:              220 30% 18%;
+    --secondary-foreground:   220 14% 85%;
+
+    --muted:                  220 30% 18%;
+    --muted-foreground:       220 9% 58%;
+
+    --accent:                 36 100% 50%;    /* Amber stays identical      */
+    --accent-foreground:      222 47% 11%;
+
+    --destructive:            0 63% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border:                 220 30% 22%;
+    --input:                  220 30% 22%;
+    --ring:                   217 91% 65%;
+
+    /* ── Sidebar in dark mode ──────────────────────────────────────────── */
+    --sidebar-background:           222 47% 8%;    /* Deeper than page bg  */
+    --sidebar-foreground:           220 20% 78%;
+    --sidebar-primary:              36 100% 55%;
+    --sidebar-primary-foreground:   222 47% 8%;
+    --sidebar-accent:               222 47% 16%;
+    --sidebar-accent-foreground:    220 14% 92%;
+    --sidebar-border:               220 30% 16%;
+    --sidebar-ring:                 36 100% 55%;
+
+    /* ── Charts in dark mode ────────────────────────────────────────────── */
+    --chart-1:    217 91% 65%;
+    --chart-2:    142 60% 48%;
+    --chart-3:    36 100% 58%;
+    --chart-4:    213 56% 55%;
+    --chart-5:    220 9% 55%;
+  }
+}
+
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border box-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+    /* Prevent font size inflation on iOS when rotating to landscape */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+  }
+
+  /* Headings use the display font (Geist) for authority */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-balance;
+  }
+
+  /* Body text uses Inter for readability */
+  p, li, td, th {
+    @apply text-pretty;
+  }
+
+  /* Global focus-visible ring (accessibility) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Refined scrollbar for desktop */
+  ::-webkit-scrollbar         { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track   { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb   { @apply bg-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/50; }
+
+  /* Selection highlight using brand color */
+  ::selection {
+    background-color: hsl(var(--brand-blue-100));
+    color:            hsl(var(--brand-midnight));
+  }
+  .dark ::selection {
+    background-color: hsl(var(--brand-midnight));
+    color:            hsl(var(--brand-blue-100));
+  }
+}
+
+/* ─── Component Utilities ─────────────────────────────────────────────────── */
+@layer utilities {
+  /* ── Text balance / pretty ────────────────────────────────────────────── */
+  .text-balance { text-wrap: balance; }
+  .text-pretty  { text-wrap: pretty; }
+
+  /* ── Gradient brand text (hero sections) ─────────────────────────────── */
+  .text-gradient-brand {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--brand-midnight)) 0%,
+      hsl(var(--brand-blue-500)) 100%
+    );
+  }
+
+  /* ── Loading skeleton shimmer ────────────────────────────────────────── */
+  .skeleton {
+    @apply animate-shimmer bg-gradient-to-r;
+    background-image: linear-gradient(
+      90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--border)) 50%,
+      hsl(var(--muted)) 75%
+    );
+    background-size: 400px 100%;
+  }
+
+  /* ── Touch target enforcement (iOS 44pt minimum) ─────────────────────── */
+  .touch-target {
+    @apply min-h-touch min-w-touch flex items-center justify-center;
+  }
+
+  /* ── QR code surface — always white, always dark text ───────────────── */
+  /* Scanners need maximum contrast — override ALL theme preferences       */
+  .qr-surface {
+    background-color: #ffffff !important;
+    color:            #000000 !important;
+    color-scheme: light !important;
+  }
+
+  /* ── Driver portal dark override ──────────────────────────────────────── */
+  /* Applied to the <html> element by DriverLayout via useEffect           */
+  .driver-dark {
+    color-scheme: dark;
+  }
+
+  /* ── Order status badge semantic colors ──────────────────────────────── */
+  .badge-pending    { @apply bg-yellow-50  text-yellow-800  border-yellow-200  dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800; }
+  .badge-confirmed  { @apply bg-blue-50    text-blue-800    border-blue-200    dark:bg-blue-900/20   dark:text-blue-300  dark:border-blue-800; }
+  .badge-processing { @apply bg-purple-50  text-purple-800  border-purple-200  dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800; }
+  .badge-shipped    { @apply bg-orange-50  text-orange-800  border-orange-200  dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800; }
+  .badge-delivered  { @apply bg-green-50   text-green-800   border-green-200   dark:bg-green-900/20  dark:text-green-300 dark:border-green-800; }
+  .badge-cancelled  { @apply bg-red-50     text-red-800     border-red-200     dark:bg-red-900/20    dark:text-red-300   dark:border-red-800; }
+  .badge-returned   { @apply bg-neutral-100 text-neutral-700 border-neutral-300 dark:bg-neutral-800/50 dark:text-neutral-300 dark:border-neutral-700; }
+
+  /* ── CTA button (Amazon Amber) ────────────────────────────────────────── */
+  /* Used exclusively for Add to Cart + Checkout. Never for navigation.    */
+  .btn-cta {
+    @apply bg-brand-amber text-[#111827] font-display font-medium
+           hover:bg-brand-amber-hover active:scale-[0.98]
+           transition-all duration-150 rounded-lg
+           shadow-sm hover:shadow-md;
+  }
+  .btn-cta:disabled {
+    @apply opacity-50 cursor-not-allowed hover:bg-brand-amber active:scale-100;
+  }
+
+  /* ── Safe area padding for driver PWA (iPhone notch / home bar) ─────── */
+  .pb-safe    { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe    { padding-top:    env(safe-area-inset-top, 0px); }
+  .px-safe    { padding-left:   env(safe-area-inset-left, 0px);
+                padding-right:  env(safe-area-inset-right, 0px); }
+
+  /* ── Numeric font feature (dashboards, pricing) ─────────────────────── */
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .slashed-zero { font-variant-numeric: slashed-zero; }
+}

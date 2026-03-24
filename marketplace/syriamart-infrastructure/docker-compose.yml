@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: syriamart-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: syriamart_admin
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: syriamart_master
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-databases.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - syriamart-network
+
+  # --- NEW PGADMIN SERVICE ---
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: syriamart-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@syriamart.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80" # We will access it in the browser on port 5050
+    depends_on:
+      - postgres
+    networks:
+      - syriamart-network
+
+networks:
+  syriamart-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

@@ -1,11 +1,20 @@
 package com.syriamart.commercial.dto.request.coupon;
 
+import com.syriamart.commercial.model.enums.DiscountType;
 import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record CouponCreateRequest(@NotBlank @Size(min = 4, max = 20) String code, @Size(max = 200) String description,
-        @NotNull @Pattern(regexp = "percentage|fixed") String discountType, @NotNull @DecimalMin("0") BigDecimal value,
-        @DecimalMin("0") BigDecimal minOrderAmount, @NotNull @Min(1) Integer maxUses, @NotNull LocalDateTime startDate,
-        @NotNull LocalDateTime endDate) {
-}
+public record CouponCreateRequest(
+        @NotBlank @Size(max = 30) String code,
+        @Size(max = 200) String description,
+        @NotNull DiscountType discountType,
+        @NotNull @DecimalMin("0.01") BigDecimal discountValue,
+        BigDecimal minOrderAmount,
+        BigDecimal maxDiscountAmount,
+        @NotNull LocalDateTime validFrom,
+        @NotNull LocalDateTime validTo,
+        Integer usageLimit,
+        int perUserLimit
+) {}

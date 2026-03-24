@@ -2,8 +2,8 @@ package com.syriamart.commercial.controller;
 
 import com.syriamart.commercial.dto.request.category.CategoryCreateRequest;
 import com.syriamart.commercial.dto.request.category.CategoryUpdateRequest;
-import com.syriamart.commercial.dto.response.category.CategoryTreeResponse;
 import com.syriamart.commercial.dto.response.category.CategoryResponse;
+import com.syriamart.commercial.dto.response.category.CategoryTreeResponse;
 import com.syriamart.commercial.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,49 +15,72 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
-    // ====================================================
-    // PUBLIC ENDPOINTS (Anyone can see categories)
-    // ====================================================
+    // ── Public ────────────────────────────────────────────────────────────────
 
-    @GetMapping("/public/categories")
-    public ResponseEntity<List<CategoryTreeResponse>> getAllCategoriesTree() {
-        return ResponseEntity.ok(categoryService.getCategoryTree());
+    @GetMapping
+    public ResponseEntity<List<CategoryTreeResponse>> getAll() {
+        return ResponseEntity.ok(categoryService.findAllActiveTree());
     }
 
-    @GetMapping("/public/categories/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable String id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> getById(@PathVariable String id) {
+        return ResponseEntity.ok(categoryService.findById(id));
     }
 
-    // ====================================================
-    // ADMIN ENDPOINTS (Restricted Access)
-    // ====================================================
+    // ── Admin ─────────────────────────────────────────────────────────────────
 
-    @PostMapping("/admin/categories")
-    @PreAuthorize("hasRole('ADMIN')") // Logic depends on your Security Setup
-    public ResponseEntity<CategoryResponse> createCategory(
-            @Valid @RequestBody CategoryCreateRequest request) {
-        return new ResponseEntity<>(categoryService.createCategory(request), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/admin/categories/{id}")
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryResponse> updateCategory(
+    public ResponseEntity<CategoryResponse> create(
+            @Valid @RequestBody CategoryCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(categoryService.create(request));
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryResponse> update(
             @PathVariable String id,
             @Valid @RequestBody CategoryUpdateRequest request) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, request));
+        return ResponseEntity.ok(categoryService.update(id, request));
     }
 
-    @DeleteMapping("/admin/categories/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCategory(@PathVariable String id) {
-        categoryService.deleteCategory(id);
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        categoryService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // ── SubCategory (Admin only) ───────────────────────────────────────────────
+
+    @PostMapping("/{categoryId}/sub-categories")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryResponse> createSub(
+            @PathVariable String categoryId,
+            @Valid @RequestBody CategoryCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                             .body(categoryService.createSubCategory(categoryId, request));
+    }
+
+    @PutMapping("/sub-categories/{subId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryResponse> updateSub(
+            @PathVariable String subId,
+            @Valid @RequestBody CategoryUpdateRequest request) {
+        return ResponseEntity.ok(categoryService.updateSubCategory(subId, request));
+    }
+
+    @DeleteMapping("/sub-categories/{subId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteSub(@PathVariable String subId) {
+        categoryService.deleteSubCategory(subId);
         return ResponseEntity.noContent().build();
     }
 }

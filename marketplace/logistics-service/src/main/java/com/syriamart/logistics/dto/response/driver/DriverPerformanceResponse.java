@@ -1,5 +1,11 @@
 package com.syriamart.logistics.dto.response.driver;
 
-public record DriverPerformanceResponse(double rating, int totalDeliveries, int onTimeDeliveries, double completionRate,
-        int customerComplaints) {
-}
+import java.math.BigDecimal;
+
+public record DriverPerformanceResponse(
+        String driverId, String fullName,
+        int totalDeliveries, int successfulDeliveries,
+        int failedDeliveries, int totalReturnsHandled,
+        double successRate, BigDecimal averageRating,
+        BigDecimal totalEarnings
+) {}

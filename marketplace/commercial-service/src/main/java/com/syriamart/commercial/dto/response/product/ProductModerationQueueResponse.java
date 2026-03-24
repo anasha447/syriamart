@@ -1,8 +1,8 @@
 package com.syriamart.commercial.dto.response.product;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
-public record ProductModerationQueueResponse(String productId, String name, String sellerName, String sellerId,
-        String categoryName, String status, BigDecimal price, String mainImageUrl, LocalDateTime submittedAt) {
-}
+public record ProductModerationQueueResponse(
+        List<ProductSummaryResponse> products,
+        long totalPending
+) {}

@@ -1,9 +1,13 @@
 package com.syriamart.commercial.dto.response.dashboard;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-public record SellerAnalyticsResponse(BigDecimal totalSales, BigDecimal totalRevenue, BigDecimal platformCommission,
-        int totalOrders, int totalProducts, Double averageRating, int totalReviews, BigDecimal averageOrderValue,
-        LocalDateTime lastUpdated) {
-}
+public record SellerAnalyticsResponse(
+        String sellerId, int year, int month,
+        int totalOrders, int completedOrders,
+        int cancelledOrders, int returnedOrders,
+        BigDecimal totalRevenue, int totalItemsSold,
+        BigDecimal averageOrderValue,
+        BigDecimal averageRating, int totalReviews,
+        BigDecimal returnRate
+) {}

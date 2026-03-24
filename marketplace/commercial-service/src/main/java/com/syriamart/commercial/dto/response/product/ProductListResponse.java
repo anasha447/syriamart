@@ -1,8 +1,9 @@
 package com.syriamart.commercial.dto.response.product;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
-public record ProductListResponse(String id, String name, String categoryName, BigDecimal price, int stock,
-        String status, boolean adminApproved, String mainImageUrl, LocalDateTime createdAt) {
-}
+public record ProductListResponse(
+        List<ProductSummaryResponse> products,
+        int page, int size,
+        long totalElements, int totalPages
+) {}

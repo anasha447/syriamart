@@ -1,32 +1,35 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A persistent shopping cart, one per customer.
+ * One cart is created lazily on first add-to-cart.
+ */
 @Entity
-@Table(name = "carts")
+@Table(name = "carts", indexes = {
+        @Index(name = "idx_cart_customer", columnList = "customer_id", unique = true)
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class Cart extends BaseEntity {
 
-    @ToString.Include
-    private Boolean isActive;
+    @Column(name = "customer_id", nullable = false, unique = true, length = 36)
+    private String customerId;
 
-    @Column(name = "user_id")
-    private String userId;
+    /** The coupon code the customer has applied to this cart. */
+    @Column(name = "applied_coupon_code", length = 30)
+    private String appliedCouponCode;
 
-    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY)
-    private List<CartItem> cartItems;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<CartItem> items = new ArrayList<>();
 }

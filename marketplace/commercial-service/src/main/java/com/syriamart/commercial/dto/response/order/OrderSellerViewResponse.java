@@ -1,12 +1,18 @@
 package com.syriamart.commercial.dto.response.order;
 
-import com.syriamart.commercial.dto.response.address.AddressResponse;
+import com.syriamart.commercial.model.enums.OrderItemStatus;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record OrderSellerViewResponse(String orderId, String qrId, String customerName, String customerEmail,
-        List<OrderItemResponse> myItems, BigDecimal mySubtotal, BigDecimal myCommission, BigDecimal myRevenue,
-        String status, String paymentStatus, String paymentMethod, AddressResponse deliveryAddress,
-        LocalDateTime createdAt, LocalDateTime expectedDelivery) {
-}
+/** What a seller sees when viewing their incoming order items. */
+public record OrderSellerViewResponse(
+        String orderId, String customerId,
+        String shippingFullName, String shippingPhone,
+        String shippingCity, String shippingGovernorate,
+        List<OrderItemResponse> items,
+        BigDecimal sellerSubtotal,
+        OrderItemStatus aggregateStatus,
+        LocalDateTime orderedAt
+) {}

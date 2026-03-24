@@ -1,0 +1,39 @@
+{
+  "name":             "SyrianMart Driver",
+  "short_name":       "Driver",
+  "description":      "SyrianMart delivery driver portal — scan packages, manage deliveries.",
+  "start_url":        "/driver/dashboard",
+  "scope":            "/driver/",
+  "display":          "standalone",
+  "orientation":      "portrait",
+  "background_color": "#0F172A",
+  "theme_color":      "#0F172A",
+  "categories":       ["business", "logistics"],
+  "lang":             "en",
+  "icons": [
+    {
+      "src":   "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type":  "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src":   "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type":  "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name":        "Scan Package",
+      "url":         "/driver/scan",
+      "description": "Open the QR package scanner"
+    },
+    {
+      "name":        "My Orders",
+      "url":         "/driver/orders",
+      "description": "View active delivery orders"
+    }
+  ]
+}

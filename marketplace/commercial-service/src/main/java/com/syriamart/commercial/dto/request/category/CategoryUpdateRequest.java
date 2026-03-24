@@ -1,10 +1,11 @@
 package com.syriamart.commercial.dto.request.category;
 
 import jakarta.validation.constraints.Size;
-import java.math.BigDecimal;
 
 public record CategoryUpdateRequest(
         @Size(max = 100) String name,
         @Size(max = 500) String description,
-        BigDecimal adminProfitPercentage) {
-}
+        String imageUrl,
+        Boolean active,
+        Integer displayOrder
+) {}

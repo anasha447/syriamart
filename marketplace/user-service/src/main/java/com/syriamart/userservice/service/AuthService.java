@@ -9,4 +9,5 @@ public interface AuthService {
     AuthenticationResponse login(UserLoginRequest request);
     String registerCustomer(UserRegistrationRequest request);
     String registerSeller(SellerRegistrationRequest request);
+    void logout(String token);
 }

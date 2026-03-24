@@ -1,6 +1,7 @@
 package com.syriamart.commercial.dto.request.cart;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
 
-public record CartUpdateItemRequest(@NotNull String cartItemId, @NotNull @Min(0) @Max(999) Integer quantity) {
-}
+public record CartUpdateItemRequest(
+        @Min(0) int quantity
+) {}

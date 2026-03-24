@@ -1,14 +1,12 @@
 package com.syriamart.commercial.repository;
 
 import com.syriamart.commercial.model.CartItem;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
+
 public interface CartItemRepository extends JpaRepository<CartItem, String> {
-    @Modifying
-    @Transactional
+    Optional<CartItem> findByCartIdAndProductIdAndVariationValueId(String cartId, String productId, String variationValueId);
     void deleteByCartId(String cartId);
+    void deleteByCartIdAndProductId(String cartId, String productId);
 }

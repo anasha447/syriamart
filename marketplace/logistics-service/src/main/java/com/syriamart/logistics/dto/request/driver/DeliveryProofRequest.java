@@ -1,7 +1,20 @@
 package com.syriamart.logistics.dto.request.driver;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
 
-public record DeliveryProofRequest(@NotNull String orderId, @NotBlank String proofImageUrl, String customerSignatureUrl,
-        String recipientName, String note) {
-}
+/**
+ * Submitted by the driver upon delivering a package to the customer.
+ *
+ * signatureImageUrl  – URL of the recipient's signature image (uploaded to CDN
+ *                      before this request is sent).
+ * recipientName      – Name as given by the recipient at the door.
+ * photoProofUrl      – Optional photo of the package at the drop location.
+ */
+public record DeliveryProofRequest(
+        @NotBlank String signatureImageUrl,
+        @NotBlank String recipientName,
+        String photoProofUrl,
+        String notes,
+        Double latitude,
+        Double longitude
+) {}

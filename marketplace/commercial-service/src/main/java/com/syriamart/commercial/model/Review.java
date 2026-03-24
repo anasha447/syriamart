@@ -1,38 +1,55 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
+/**
+ * Customer review on a product.
+ * isVerifiedPurchase is true when the orderItemId points to a real DELIVERED item.
+ * Only verified purchasers may leave a review; guests or non-buyers cannot.
+ */
 @Entity
-@Table(name = "reviews")
+@Table(name = "reviews", indexes = {
+        @Index(name = "idx_review_product",  columnList = "product_id"),
+        @Index(name = "idx_review_customer", columnList = "customer_id")
+},
+uniqueConstraints = {
+        @UniqueConstraint(name = "uq_review_per_order_item", columnNames = "order_item_id")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class Review extends BaseEntity {
 
-    @ToString.Include
-    private Integer rating;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
+    @Column(name = "customer_id", nullable = false, length = 36)
+    private String customerId;
+
+    /** Links back to the specific delivery so we can verify the purchase. */
+    @Column(name = "order_item_id", nullable = false, unique = true, length = 36)
+    private String orderItemId;
+
+    /** 1–5 star rating. */
+    @Column(nullable = false)
+    private int rating;
+
+    @Column(columnDefinition = "TEXT")
     private String comment;
 
+    @Column(name = "is_verified_purchase", nullable = false)
     @Builder.Default
-    @ToString.Include
+    private boolean verifiedPurchase = true;
+
+    @Column(name = "is_approved", nullable = false)
+    @Builder.Default
     private boolean approved = false;
 
-    @Column(name = "user_id")
-    private String userId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    @JsonIgnore
-    private Product product;
+    @Column(name = "seller_reply", columnDefinition = "TEXT")
+    private String sellerReply;
 }

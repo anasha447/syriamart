@@ -1,39 +1,42 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
+import java.math.BigDecimal;
+
+/**
+ * A single product line inside a Cart.
+ * unitPrice is snapshotted at add-to-cart time and re-validated at checkout.
+ */
 @Entity
-@Table(name = "cart_items")
+@Table(name = "cart_items", indexes = {
+        @Index(name = "idx_ci_cart",    columnList = "cart_id"),
+        @Index(name = "idx_ci_product", columnList = "product_id")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class CartItem extends BaseEntity {
 
-    @ToString.Include
-    private Integer quantity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    @JsonIgnore
-    private Product product;
+    @Column(name = "product_id", nullable = false, length = 36)
+    private String productId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variation_value_id")
-    @JsonIgnore
-    private ProductVariationValue variationValue;
+    /** Null when product has no variations. */
+    @Column(name = "variation_value_id", length = 36)
+    private String variationValueId;
+
+    @Column(nullable = false)
+    private int quantity;
+
+    /** Price snapshot at the moment this item was added. */
+    @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
+    private BigDecimal unitPrice;
 }

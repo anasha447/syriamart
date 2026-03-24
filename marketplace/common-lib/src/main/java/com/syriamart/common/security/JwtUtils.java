@@ -40,4 +40,8 @@ public class JwtUtils {
     public String getUserIdFromToken(String token) {
         return validateAndGetClaims(token).get("userId", String.class);
     }
+
+    public Date getExpirationDateFromToken(String token) {
+        return validateAndGetClaims(token).getExpiration();
+    }
 }

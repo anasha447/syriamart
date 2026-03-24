@@ -4,8 +4,11 @@ import com.syriamart.userservice.dto.request.seller.SellerApprovalRequest;
 import com.syriamart.userservice.dto.request.seller.SellerProfileUpdateRequest;
 import com.syriamart.userservice.dto.response.seller.SellerDetailResponse;
 import com.syriamart.userservice.mapper.UserMapper;
+import com.syriamart.userservice.model.Address;
 import com.syriamart.userservice.model.Seller;
+import com.syriamart.userservice.model.enums.AddressType;
 import com.syriamart.userservice.model.enums.SellerStatus;
+import com.syriamart.userservice.repository.AddressRepository;
 import com.syriamart.userservice.repository.SellerRepository;
 import com.syriamart.userservice.service.SellerService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 public class SellerServiceImpl implements SellerService {
 
     private final SellerRepository sellerRepository;
+    private final AddressRepository addressRepository;
     private final UserMapper userMapper;
 
     @Override
@@ -64,10 +69,51 @@ public class SellerServiceImpl implements SellerService {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Seller not found"));
 
+        // 1. Map basic Seller info (name, phone, storeName, storeLocation, productType)
         userMapper.updateSellerFromRequest(seller, request);
-        Seller savedSeller = sellerRepository.save(seller);
 
+        // 2. Handle the Image URL explicitly
+        if (request.profileImageUrl() != null) {
+            seller.setProfileImageUrl(request.profileImageUrl());
+        }
+
+        // 3. Handle the Address Logic (if address fields were provided)
+        if (request.city() != null || request.fullAddress() != null || request.landmark() != null) {
+            updateOrCreateStoreAddress(seller, request);
+        }
+
+        Seller savedSeller = sellerRepository.save(seller);
         return userMapper.toSellerResponse(savedSeller);
+    }
+
+    private void updateOrCreateStoreAddress(Seller seller, SellerProfileUpdateRequest request) {
+        // Look for an existing STORE address
+        Optional<Address> existingAddress = addressRepository.findBySellerId(seller.getId())
+                .stream()
+                .filter(a -> AddressType.STORE.equals(a.getType()))
+                .findFirst();
+
+        Address address;
+        if (existingAddress.isPresent()) {
+            address = existingAddress.get();
+        } else {
+            // Create a new address if one doesn't exist
+            address = Address.builder()
+                    .seller(seller)
+                    .type(AddressType.STORE)
+                    // Set safe defaults for database constraints
+                    .country("India")
+                    .state("Pending Update")
+                    .postalCode("000000")
+                    .build();
+        }
+
+        // Update fields if provided in the PUT request (Partial Updates)
+        if (request.city() != null) address.setCity(request.city());
+        if (request.fullAddress() != null) address.setAddressLine1(request.fullAddress());
+        if (request.landmark() != null) address.setAddressLine2(request.landmark());
+
+        addressRepository.save(address);
     }
 
     @Override
@@ -80,6 +126,12 @@ public class SellerServiceImpl implements SellerService {
         if (request.approved()) {
             seller.setAdminApproved(true);
             seller.setStatus(SellerStatus.ACTIVE);
+
+            if (request.approvedByAdminName() != null) {
+                // Assuming you have this field in your Seller entity
+                // seller.setApprovedByAdminName(request.approvedByAdminName());
+            }
+
             log.info("Seller {} approved.", sellerId);
         } else {
             seller.setAdminApproved(false);
@@ -89,5 +141,4 @@ public class SellerServiceImpl implements SellerService {
 
         sellerRepository.save(seller);
     }
-
 }
