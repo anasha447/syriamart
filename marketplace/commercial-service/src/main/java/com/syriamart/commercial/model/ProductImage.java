@@ -1,12 +1,8 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
 @Entity
 @Table(name = "product_images")
@@ -14,18 +10,25 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class ProductImage extends BaseEntity {
 
-    private String imageUrl;
-
-    @ToString.Include
-    private Boolean isMain;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @Column(nullable = false)
+    private String url;
+
+    /** The primary image shown in listings. Only one per product. */
+    @Column(name = "is_primary", nullable = false)
+    @Builder.Default
+    private boolean isPrimary = false;
+
+    @Column(name = "display_order")
+    @Builder.Default
+    private int displayOrder = 0;
+
+    @Column(name = "alt_text", length = 200)
+    private String altText;
 }

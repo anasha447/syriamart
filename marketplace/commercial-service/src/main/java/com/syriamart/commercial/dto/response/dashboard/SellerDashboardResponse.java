@@ -1,10 +1,16 @@
 package com.syriamart.commercial.dto.response.dashboard;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import com.syriamart.commercial.dto.response.order.OrderListResponse;
+import com.syriamart.commercial.dto.response.product.ProductSummaryResponse;
 
-public record SellerDashboardResponse(int totalProducts, int activeProducts, int pendingApprovals, int rejectedProducts,
-        int totalOrders, int pendingOrders, int shippedOrders, int completedOrders, BigDecimal totalSales,
-        BigDecimal totalRevenue, BigDecimal platformCommission, Double averageRating, int totalReviews,
-        LocalDateTime lastUpdated) {
-}
+import java.math.BigDecimal;
+import java.util.List;
+
+public record SellerDashboardResponse(
+        String sellerId,
+        long activeProducts, long pendingProducts,
+        long ordersThisMonth, BigDecimal revenueThisMonth,
+        BigDecimal averageRating,
+        List<OrderListResponse> recentOrders,
+        List<ProductSummaryResponse> topProducts
+) {}

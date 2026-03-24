@@ -6,17 +6,18 @@ spring:
     name: commercial-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5400/commercial_db
-    username: postgres
-    password: 'Anas09303@nas' # Bolder quote used due to special characters
+    url: jdbc:postgresql://localhost:5432/commercial_db
+    username: syriamart_admin
+    password: supersecretpassword # Bolder quote used due to special characters
 
   jpa:
     hibernate:
-      ddl-auto: create
-    open-in-view: false
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
 logging:
   level:
@@ -37,3 +38,12 @@ management:
 
 jwt:
   secret: YourSuperSecretKeyMustBeSharedBetweenServices!!
+
+eureka:
+  client:
+    service-url:
+      # This is the address of the Phonebook we just started!
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    # This tells Eureka to use the service's IP address rather than the host name
+    prefer-ip-address: true

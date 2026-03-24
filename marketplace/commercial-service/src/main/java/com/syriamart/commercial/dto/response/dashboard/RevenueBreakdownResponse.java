@@ -1,8 +1,12 @@
 package com.syriamart.commercial.dto.response.dashboard;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.List;
 
-public record RevenueBreakdownResponse(Map<String, BigDecimal> revenueByProduct,
-        Map<String, BigDecimal> revenueByCategory, Map<String, BigDecimal> revenueByMonth, BigDecimal totalRevenue) {
+public record RevenueBreakdownResponse(
+        BigDecimal totalRevenue,
+        BigDecimal platformCommission,
+        List<MonthlyRevenue> monthly
+) {
+    public record MonthlyRevenue(int year, int month, BigDecimal revenue) {}
 }

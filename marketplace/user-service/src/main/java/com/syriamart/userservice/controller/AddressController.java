@@ -24,7 +24,7 @@ public class AddressController {
     private final AddressService addressService;
     private final JwtUtils jwtUtils;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<AddressResponse> createAddress(@Valid @RequestBody AddressCreateRequest request,
                                                          HttpServletRequest httpRequest) {
         String userId = extractUserId(httpRequest);
@@ -39,7 +39,7 @@ public class AddressController {
         return ResponseEntity.ok(addressService.updateAddress(addressId, userId, request));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<AddressResponse>> getUserAddresses(HttpServletRequest httpRequest) {
         String userId = extractUserId(httpRequest);
         return ResponseEntity.ok(addressService.getUserAddresses(userId));

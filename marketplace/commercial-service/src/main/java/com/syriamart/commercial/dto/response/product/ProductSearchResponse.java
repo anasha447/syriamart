@@ -1,8 +1,9 @@
 package com.syriamart.commercial.dto.response.product;
 
 import java.util.List;
-import java.util.Map;
 
-public record ProductSearchResponse(List<ProductCatalogResponse> products, String searchTerm, int totalResults,
-        Map<String, Integer> categoryFacets) {
-}
+public record ProductSearchResponse(
+        String query,
+        List<ProductSummaryResponse> results,
+        int page, int size, long totalElements, int totalPages
+) {}

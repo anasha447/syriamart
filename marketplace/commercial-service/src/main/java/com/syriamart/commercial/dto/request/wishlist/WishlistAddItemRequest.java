@@ -1,6 +1,7 @@
 package com.syriamart.commercial.dto.request.wishlist;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
-public record WishlistAddItemRequest(@NotNull String wishlistId, @NotNull String productId) {
-}
+public record WishlistAddItemRequest(
+        @NotBlank String productId
+) {}

@@ -1,7 +1,8 @@
 package com.syriamart.logistics.dto.request.driver;
 
-import jakarta.validation.constraints.*;
+import com.syriamart.logistics.model.enums.DriverStatus;
+import jakarta.validation.constraints.NotNull;
 
-public record DriverStatusUpdateRequest(@NotNull @Pattern(regexp = "ONLINE|OFFLINE|BUSY|ON_DELIVERY") String status,
-        Double latitude, Double longitude) {
-}
+public record DriverStatusUpdateRequest(
+        @NotNull DriverStatus status
+) {}

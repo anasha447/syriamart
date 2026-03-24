@@ -1,6 +1,14 @@
 package com.syriamart.commercial.dto.request.coupon;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record CouponUpdateRequest(Integer maxUses, LocalDateTime endDate, Boolean active) {
-}
+public record CouponUpdateRequest(
+        String description,
+        BigDecimal minOrderAmount,
+        BigDecimal maxDiscountAmount,
+        LocalDateTime validFrom,
+        LocalDateTime validTo,
+        Integer usageLimit,
+        Boolean active
+) {}

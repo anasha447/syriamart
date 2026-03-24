@@ -1,7 +1,8 @@
 package com.syriamart.logistics.dto.response.driver;
 
-import java.time.LocalDate;
+import com.syriamart.logistics.model.enums.VehicleType;
 
-public record VehicleDetailsResponse(String vehicleId, String type, String model, String plateNumber, String color,
-        LocalDate registrationExpiry) {
-}
+public record VehicleDetailsResponse(
+        VehicleType vehicleType, String make, String model,
+        Integer year, String plate, String color
+) {}

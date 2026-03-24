@@ -1,6 +1,9 @@
 package com.syriamart.logistics.dto.request.fulfillment;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
-public record InventoryCheckRequest(@NotBlank String productId, String warehouseId) {
-}
+import java.util.List;
+
+public record InventoryCheckRequest(
+        @NotEmpty List<String> orderIds
+) {}

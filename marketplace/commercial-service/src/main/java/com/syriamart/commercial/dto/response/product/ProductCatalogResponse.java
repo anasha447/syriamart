@@ -1,8 +1,11 @@
 package com.syriamart.commercial.dto.response.product;
 
-import java.math.BigDecimal;
+import java.util.List;
 
-public record ProductCatalogResponse(String id, String name, String categoryName, BigDecimal price,
-        BigDecimal originalPrice, String discountLabel, String mainImageUrl, Double averageRating, int reviewCount,
-        boolean inStock, String sellerName) {
-}
+/** Category-scoped product page returned to catalog/browse endpoints. */
+public record ProductCatalogResponse(
+        String categoryId, String categoryName,
+        String subCategoryId,
+        List<ProductSummaryResponse> products,
+        int page, int size, long totalElements, int totalPages
+) {}

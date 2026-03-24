@@ -1,0 +1,41 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: syriamart_admin
+    password: supersecretpassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+jwt:
+  secret: YourSuperSecretKeyMustBeSharedBetweenServices!!
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.syriamart.userservice: DEBUG
+
+# Notice how 'test' is now pushed completely to the left edge!
+test:
+  message: "HELLO FROM YAML! THE FILE IS WORKING!"
+
+  eureka:
+    client:
+      service-url:
+        # This is the address of the Phonebook we just started!
+        defaultZone: http://localhost:8761/eureka/
+    instance:
+      # This tells Eureka to use the service's IP address rather than the host name
+      prefer-ip-address: true

@@ -10,50 +10,44 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        // 1. Completely Public (Login, Register)
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
-                        // 2. Public Read-Only Access (Categories/Products) - FIX HERE
-                        .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-
-                        // 3. SELLER
-                        .requestMatchers("/api/seller/**").hasRole("SELLER")
-
-                        // 4. ADMIN
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-
-                        // 5. CUSTOMER (Specific actions like cart/order)
-                        // Note: Don't use /public/ for secured customer endpoints. Use /customer/ instead.
-                        .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
-
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                // ── Full public access ─────────────────────────────────────
+                .requestMatchers(HttpMethod.GET,
+                    "/api/categories/**",
+                    "/api/products/search",
+                    "/api/products/top-selling",
+                    "/api/products/top-rated",
+                    "/api/products/category/**",
+                    "/api/products/sub-category/**",
+                    "/api/products/seller/**",
+                    "/api/products/{id}",
+                    "/api/products/slug/**",
+                    "/api/reviews/product/**",
+                    "/api/coupons/*/validate",
+                    "/api/coupons/product/*/discounts"
+                ).permitAll()
+                // ── Everything else requires auth ──────────────────────────
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter,
+                             UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }

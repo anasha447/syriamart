@@ -8,12 +8,15 @@ import com.syriamart.userservice.dto.request.user.UserRegistrationRequest;
 import com.syriamart.userservice.dto.response.auth.AuthenticationResponse;
 import com.syriamart.userservice.model.Admin;
 import com.syriamart.userservice.model.Seller;
+import com.syriamart.userservice.model.TokenBlacklist;
 import com.syriamart.userservice.model.User;
 import com.syriamart.userservice.model.enums.SellerStatus;
 import com.syriamart.userservice.repository.AdminRepository;
 import com.syriamart.userservice.repository.SellerRepository;
+import com.syriamart.userservice.repository.TokenBlacklistRepository;
 import com.syriamart.userservice.repository.UserRepository;
 import com.syriamart.userservice.service.AuthService;
+import io.jsonwebtoken.ExpiredJwtException; // Cleaned up import
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date; // Cleaned up import
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final SellerRepository sellerRepository;
     private final AdminRepository adminRepository;
+    private final TokenBlacklistRepository tokenBlacklistRepository;
 
     @Override
     public AuthenticationResponse login(UserLoginRequest request) {
@@ -101,8 +109,8 @@ public class AuthServiceImpl implements AuthService {
 
     private void checkEmailUniqueness(String email) {
         if (userRepository.findByEmail(email).isPresent() ||
-            sellerRepository.findByEmail(email).isPresent() ||
-            adminRepository.findByEmail(email).isPresent()) {
+                sellerRepository.findByEmail(email).isPresent() ||
+                adminRepository.findByEmail(email).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists: " + email);
         }
     }
@@ -114,6 +122,46 @@ public class AuthServiceImpl implements AuthService {
             return sellerRepository.findByEmail(email).map(Seller::getId).orElseThrow();
         } else {
             return userRepository.findByEmail(email).map(User::getId).orElseThrow();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void logout(String token) {
+        log.info("Processing logout for token...");
+
+        // 1. Remove the "Bearer " prefix if the controller passed it
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        // 2. Only blacklist it if it's not already in the database
+        if (token != null && !tokenBlacklistRepository.existsByToken(token)) {
+            try {
+                // Try to get the expiration date normally
+                Date expirationDate = jwtUtils.getExpirationDateFromToken(token);
+                LocalDateTime localExpiry = expirationDate.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+
+                TokenBlacklist blacklistedToken = TokenBlacklist.builder()
+                        .token(token)
+                        .expiryDate(localExpiry)
+                        .build();
+
+                tokenBlacklistRepository.save(blacklistedToken);
+                log.info("Token successfully blacklisted. User is logged out.");
+
+            } catch (ExpiredJwtException e) {
+                // If it's already expired, we don't even need to blacklist it!
+                // The JwtAuthenticationFilter will reject it anyway.
+                log.info("Token is already expired naturally. No need to blacklist.");
+            } catch (Exception e) {
+                // Catch any other malformed token errors
+                log.error("Failed to parse token during logout: {}", e.getMessage());
+            }
+        } else {
+            log.info("Token was already blacklisted or null.");
         }
     }
 }

@@ -1,76 +1,93 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.syriamart.common.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+/**
+ * A customer's purchase transaction, potentially spanning multiple sellers.
+ * Each seller's items are tracked via OrderItem.status (OrderItemStatus).
+ *
+ * customerId is the UUID from user-service — no FK constraint here.
+ */
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+        @Index(name = "idx_order_customer", columnList = "customer_id"),
+        @Index(name = "idx_order_status",   columnList = "status")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class Order extends BaseEntity {
 
-    @Column(unique = true)
-    @ToString.Include
-    private String qrTrackingToken;
-
-    @Column(name = "qr_id", unique = true)
-    @ToString.Include
-    private String qrId;
-
-    private String addressId;
-
-    @ToString.Include
-    private String trackingNumber;
-
-    private String pickupPointId;
-    private String paymentMethod;
-
-    @ToString.Include
-    private String paymentStatus;
-
-    private String discountId;
-    private String couponId;
-
-    @Column(precision = 10, scale = 2)
-    @ToString.Include
-    private BigDecimal totalAmount;
+    @Column(name = "customer_id", nullable = false, length = 36)
+    private String customerId;
 
     @Enumerated(EnumType.STRING)
-    @ToString.Include
-    private OrderStatus status;
+    @Column(nullable = false, length = 30)
+    @Builder.Default
+    private OrderStatus status = OrderStatus.PENDING;
 
-    private String userId;
+    // ── Address snapshot (denormalized at checkout time) ────────────────────
+    @Column(name = "shipping_full_name", length = 120)
+    private String shippingFullName;
 
-    private String sellerId;
+    @Column(name = "shipping_phone", length = 20)
+    private String shippingPhone;
 
-    @Column(name = "assigned_driver_id")
-    private String assignedDriverId;
+    @Column(name = "shipping_address_line1", length = 200)
+    private String shippingAddressLine1;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-    private List<OrderItem> orderItems;
+    @Column(name = "shipping_address_line2", length = 200)
+    private String shippingAddressLine2;
 
-    @PrePersist
-    private void ensureIdentifiers() {
-        if (this.qrTrackingToken == null) {
-            this.qrTrackingToken = UUID.randomUUID().toString();
-        }
-        if (this.qrId == null) {
-            this.qrId = UUID.randomUUID().toString();
-        }
+    @Column(name = "shipping_city", length = 80)
+    private String shippingCity;
+
+    @Column(name = "shipping_governorate", length = 80)
+    private String shippingGovernorate;
+
+    // ── Pricing ─────────────────────────────────────────────────────────────
+    @Column(nullable = false, precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal subtotal = BigDecimal.ZERO;
+
+    @Column(name = "discount_amount", precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal discountAmount = BigDecimal.ZERO;
+
+    @Column(name = "shipping_fee", precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal shippingFee = BigDecimal.ZERO;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    @Builder.Default
+    private BigDecimal total = BigDecimal.ZERO;
+
+    @Column(name = "coupon_code", length = 30)
+    private String couponCode;
+
+    @Column(length = 500)
+    private String notes;
+
+    /** Populated when the logistics service confirms shipment. */
+    @Column(name = "tracking_number", length = 80)
+    private String trackingNumber;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<OrderItem> items = new ArrayList<>();
+
+    // ── Computed helpers ─────────────────────────────────────────────────────
+    public BigDecimal recalculateTotal() {
+        this.total = subtotal.subtract(discountAmount).add(shippingFee);
+        return this.total;
     }
 }

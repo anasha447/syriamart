@@ -34,4 +34,13 @@ public class AuthController {
     public ResponseEntity<String> registerSeller(@Valid @RequestBody SellerRegistrationRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registerSeller(request));
     }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.badRequest().body("Invalid or missing Authorization header");
+        }
+
+        authService.logout(authHeader);
+        return ResponseEntity.ok("Successfully logged out.");
+    }
 }

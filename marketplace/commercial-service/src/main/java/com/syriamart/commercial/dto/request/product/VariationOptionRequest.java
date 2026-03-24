@@ -1,8 +1,9 @@
 package com.syriamart.commercial.dto.request.product;
 
-import jakarta.validation.constraints.*;
-import java.math.BigDecimal;
+import jakarta.validation.constraints.NotBlank;
 
-public record VariationOptionRequest(@NotBlank @Size(max = 50) String value, Integer stockOverride,
-        BigDecimal priceOverride, String skuSuffix) {
-}
+public record VariationOptionRequest(
+        @NotBlank String value,
+        String colorHex,
+        int displayOrder
+) {}

@@ -1,36 +1,47 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sub_categories")
+@Table(name = "sub_categories",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"slug"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class SubCategory extends BaseEntity {
 
-    @ToString.Include
-    private String name;
-
-    private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String slug;
+
+    @Column(length = 500)
+    private String description;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
+
+    @Column(name = "display_order")
+    @Builder.Default
+    private int displayOrder = 0;
+
     @OneToMany(mappedBy = "subCategory", fetch = FetchType.LAZY)
-    private List<Product> products;
+    @Builder.Default
+    private List<Product> products = new ArrayList<>();
 }

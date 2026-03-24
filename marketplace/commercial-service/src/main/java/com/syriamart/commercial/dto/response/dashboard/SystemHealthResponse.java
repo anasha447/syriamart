@@ -1,5 +1,7 @@
 package com.syriamart.commercial.dto.response.dashboard;
 
-public record SystemHealthResponse(String commercialServiceStatus, String logisticsServiceStatus, String databaseStatus,
-        String eventBusStatus, int activeConnections, long requestsPerMinute, double avgResponseTimeMs) {
-}
+public record SystemHealthResponse(
+        String status, long totalProducts,
+        long totalOrders, long totalCoupons,
+        String dbStatus, String messageStatus
+) {}

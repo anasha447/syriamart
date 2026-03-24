@@ -1,31 +1,63 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 
+/**
+ * Monthly platform-wide analytics snapshot (admin view).
+ */
 @Entity
-@Table(name = "admin_analytics")
-@Comment("Materialized snapshot — do NOT query as live data")
+@Table(name = "admin_analytics",
+       uniqueConstraints = @UniqueConstraint(columnNames = {"year", "month"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class AdminAnalytics extends BaseEntity {
 
-    @ToString.Include
-    private BigDecimal totalSales;
+    @Column(nullable = false)
+    private int year;
 
-    @Column(name = "admin_id")
-    private String adminId;
+    @Column(nullable = false)
+    private int month;
+
+    @Column(name = "total_orders")
+    @Builder.Default
+    private int totalOrders = 0;
+
+    @Column(name = "total_revenue", precision = 14, scale = 2)
+    @Builder.Default
+    private BigDecimal totalRevenue = BigDecimal.ZERO;
+
+    @Column(name = "total_customers")
+    @Builder.Default
+    private long totalCustomers = 0;
+
+    @Column(name = "active_sellers")
+    @Builder.Default
+    private int activeSellers = 0;
+
+    @Column(name = "new_products_listed")
+    @Builder.Default
+    private int newProductsListed = 0;
+
+    @Column(name = "products_pending_review")
+    @Builder.Default
+    private int productsPendingReview = 0;
+
+    @Column(name = "platform_commission", precision = 14, scale = 2)
+    @Builder.Default
+    private BigDecimal platformCommission = BigDecimal.ZERO;
+
+    @Column(name = "cancelled_orders")
+    @Builder.Default
+    private int cancelledOrders = 0;
+
+    @Column(name = "returned_orders")
+    @Builder.Default
+    private int returnedOrders = 0;
 }

@@ -1,12 +1,17 @@
 package com.syriamart.logistics.dto.request.pickuppoint;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 public record PickupPointCreateRequest(
-        @NotBlank @Size(max = 200) String name,
-        @NotNull String addressId,
-        String sellerId,
-        String adminId) {
-}
+        @NotBlank String name,
+        @NotBlank String addressLine1,
+        String addressLine2,
+        @NotBlank String city,
+        @NotBlank String governorate,
+        Double latitude,
+        Double longitude,
+        String contactPhone,
+        String operatingHours,
+        @Min(1) int maxCapacity
+) {}

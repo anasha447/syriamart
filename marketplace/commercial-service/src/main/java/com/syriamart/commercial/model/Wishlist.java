@@ -1,29 +1,35 @@
 package com.syriamart.commercial.model;
 
 import com.syriamart.common.model.BaseEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.SQLRestriction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "wishlists")
+@Table(name = "wishlists", indexes = {
+        @Index(name = "idx_wishlist_customer", columnList = "customer_id")
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-@ToString(onlyExplicitlyIncluded = true, callSuper = true)
-@SQLRestriction("deleted = false")
+@Builder
 public class Wishlist extends BaseEntity {
 
-    @Column(name = "user_id")
-    private String userId;
+    @Column(name = "customer_id", nullable = false, length = 36)
+    private String customerId;
 
-    @OneToMany(mappedBy = "wishlist", fetch = FetchType.LAZY)
-    private List<WishlistItem> wishlistItems;
+    @Column(nullable = false, length = 80)
+    @Builder.Default
+    private String name = "My Wishlist";
+
+    @Column(name = "is_default", nullable = false)
+    @Builder.Default
+    private boolean defaultList = true;
+
+    @OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<WishlistItem> items = new ArrayList<>();
 }

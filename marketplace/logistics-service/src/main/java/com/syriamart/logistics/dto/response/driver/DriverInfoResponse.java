@@ -1,5 +1,11 @@
 package com.syriamart.logistics.dto.response.driver;
 
-public record DriverInfoResponse(String driverId, String name, String phone, String vehicleType,
-        String vehiclePlateNumber) {
-}
+import com.syriamart.logistics.model.enums.DriverStatus;
+
+public record DriverInfoResponse(
+        String id, String firstName, String lastName,
+        String email, String phone,
+        DriverStatus status, boolean active,
+        Double currentLatitude, Double currentLongitude,
+        String lastLocationUpdate
+) {}

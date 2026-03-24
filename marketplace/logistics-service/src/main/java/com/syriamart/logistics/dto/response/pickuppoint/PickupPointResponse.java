@@ -1,7 +1,11 @@
 package com.syriamart.logistics.dto.response.pickuppoint;
 
-import com.syriamart.logistics.dto.response.address.AddressResponse;
-
-public record PickupPointResponse(String id, String name, AddressResponse address, String contactPhone,
-        boolean isActive) {
-}
+public record PickupPointResponse(
+        String id, String name,
+        String addressLine1, String addressLine2,
+        String city, String governorate,
+        Double latitude, Double longitude,
+        String contactPhone, String operatingHours,
+        int maxCapacity, int currentOccupancy,
+        boolean active
+) {}

@@ -1,8 +1,12 @@
 package com.syriamart.commercial.dto.response.order;
 
-import com.syriamart.commercial.dto.response.address.AddressResponse;
 import java.math.BigDecimal;
+import java.util.List;
 
-public record CheckoutSummaryResponse(BigDecimal subtotal, BigDecimal discountAmount, BigDecimal shippingFee,
-        BigDecimal total, int itemCount, AddressResponse deliveryAddress, String paymentMethod) {
-}
+public record CheckoutSummaryResponse(
+        String orderId,
+        List<OrderItemResponse> items,
+        BigDecimal subtotal, BigDecimal discountAmount,
+        BigDecimal shippingFee, BigDecimal total,
+        String appliedCouponCode, String message
+) {}

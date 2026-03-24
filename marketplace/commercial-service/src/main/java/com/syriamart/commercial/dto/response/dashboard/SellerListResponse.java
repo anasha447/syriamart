@@ -1,16 +1,9 @@
 package com.syriamart.commercial.dto.response.dashboard;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 public record SellerListResponse(
-        String id,
-        String name,
-        String email,
-        String status,
-        boolean adminApproved,
-        int productCount,
-        int orderCount,
-        BigDecimal totalSales,
-        LocalDateTime createdAt) {
-}
+        String sellerId, String storeName,
+        long totalProducts, int totalOrders,
+        BigDecimal totalRevenue, BigDecimal averageRating
+) {}
